@@ -53,8 +53,9 @@ Search the source for these; each is marked with an HTML comment.
    Replace with your own figures or delete the band.
 2. **Testimonials** — all three quotes and the people and companies attributed to them
    are invented. Swap in real, permissioned quotes before this page is public.
-3. **Contact** — `hello@groundworksolutions.ai` appears in two `mailto:` links in the
-   CTA and once in the footer. Point them at a real inbox or a booking URL.
+3. ~~**Contact**~~ — done. "book a call" (nav) and "book a fit call" (CTA) open the
+   Google Calendar booking page; the ghost button and the footer link mail
+   `dothan@trygroundworksolutions.com`.
 4. **Pricing and process claims** — the six-week timeline, the fixed-fee structure, and
    the data-handling commitments in the FAQ are written as reasonable defaults. Confirm
    each one matches what you actually offer.
