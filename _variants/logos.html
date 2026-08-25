@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo marks — Groundwork Solutions</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<style>
+.lab{padding-block:clamp(2.5rem,5vw,4rem);border-bottom:1px solid var(--rule)}
+.lab__meta{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:baseline;margin-bottom:2rem}
+.lab__n{font-family:"DM Mono",monospace;font-size:.75rem;letter-spacing:.14em;
+  padding:.3rem .6rem;border-radius:var(--r-pill);background:var(--signal);color:var(--signal-ink)}
+.lab__name{font-size:var(--step-1);font-weight:700}
+.lab__note{font-size:.875rem;color:var(--ink-soft);flex:1 1 26ch;min-width:24ch}
+
+/* size ladder */
+.ladder{display:flex;flex-wrap:wrap;gap:2.5rem;align-items:flex-end}
+.spec{display:flex;flex-direction:column;gap:.6rem;align-items:flex-start}
+.spec__k{font-family:"DM Mono",monospace;font-size:.6875rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-soft)}
+.mk{color:var(--ink);display:block}
+.mk--sig{color:var(--signal)}
+.s40{width:40px;height:40px}
+.s24{width:24px;height:24px}
+.s16{width:16px;height:16px}
+
+/* lockup preview */
+.lock{display:flex;align-items:center;gap:.6rem;font-family:"DM Mono",monospace;
+  font-size:1.125rem;font-weight:500;letter-spacing:-.02em}
+
+/* favicon tile preview */
+.tile{width:32px;height:32px;border-radius:7px;background:var(--signal);
+  display:grid;place-items:center;color:#fff}
+.tile svg{width:22px;height:22px}
+.tile--sm{width:16px;height:16px;border-radius:3.5px}
+.tile--sm svg{width:11px;height:11px}
+
+/* fake browser tab, to judge it where it actually lives */
+.tabbar{display:flex;align-items:center;gap:.5rem;padding:.5rem .8rem;
+  background:var(--tint);border:1px solid var(--rule);border-radius:8px 8px 0 0;
+  font-size:.8125rem;color:var(--ink-soft);max-width:230px}
+.tabbar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="nav__mark" href="../" aria-label="Back">
+    <span class="nav__word">logo lab</span>
+  </a>
+  <div class="nav__end">
+    <button class="toggle" id="theme-toggle" type="button" aria-pressed="false">
+      <span class="toggle__label" data-light>dark</span>
+      <span class="toggle__label" data-dark>light</span>
+    </button>
+    <a class="nav__cta" href="../">back to the page</a>
+  </div>
+</header>
+
+<!-- every mark defined once, reused at each size -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+
+  <!-- 01 what I built first — chip + symmetrical roots -->
+  <symbol id="m1" viewBox="0 0 32 32">
+    <g stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.4 7.2H10.3M12.4 10H10.3M19.6 7.2h2.1M19.6 10h2.1"/>
+      <path d="M16 13.2v2.6"/><path d="M16 15.8 10.2 21.6v2.3"/>
+      <path d="M16 15.8 21.8 21.6v2.3"/><path d="M16 15.8v8.1"/>
+    </g>
+    <rect x="12.4" y="5.4" width="7.2" height="6.4" rx="1.4" fill="currentColor"/>
+    <g fill="currentColor"><circle cx="10.2" cy="25.5" r="1.6"/><circle cx="16" cy="25.5" r="1.6"/><circle cx="21.8" cy="25.5" r="1.6"/></g>
+  </symbol>
+
+  <!-- 02 the earth/ground symbol, roots growing out of the bottom bar -->
+  <symbol id="m2" viewBox="0 0 32 32">
+    <g stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round">
+      <path d="M16 4v7"/>
+      <path d="M6.5 11.5h19"/>
+      <path d="M9.5 16h13"/>
+      <path d="M12.5 20.5h7"/>
+    </g>
+    <g stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 20.5 11 24.5v2"/><path d="M18 20.5 21 24.5v2"/>
+    </g>
+    <g fill="currentColor"><circle cx="11" cy="27.8" r="1.5"/><circle cx="21" cy="27.8" r="1.5"/></g>
+  </symbol>
+
+  <!-- 03 pure root trace, asymmetric — no chip, no enclosure -->
+  <symbol id="m3" viewBox="0 0 32 32">
+    <g stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 3v9"/>
+      <path d="M16 12 8.5 19.5v4"/>
+      <path d="M16 12v6"/>
+      <path d="M16 18 22 24v2.5"/>
+      <path d="M16 18v8.5"/>
+      <path d="M12.2 15.8 9 15.8"/>
+    </g>
+    <g fill="currentColor">
+      <circle cx="8.5" cy="25.2" r="1.7"/><circle cx="16" cy="28.2" r="1.7"/><circle cx="22" cy="28.2" r="1.7"/>
+    </g>
+  </symbol>
+
+  <!-- 04 enclosed: root system inside a rounded square -->
+  <symbol id="m4" viewBox="0 0 32 32">
+    <rect x="2.5" y="2.5" width="27" height="27" rx="7" fill="none" stroke="currentColor" stroke-width="2"/>
+    <g stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 7v6"/><path d="M16 13 11 18v3.5"/><path d="M16 13 21 18v3.5"/><path d="M16 13v8.5"/>
+    </g>
+    <g fill="currentColor"><circle cx="11" cy="23.5" r="1.5"/><circle cx="16" cy="23.5" r="1.5"/><circle cx="21" cy="23.5" r="1.5"/></g>
+  </symbol>
+
+  <!-- 05 the ground symbol alone — three bars, nothing else -->
+  <symbol id="m5" viewBox="0 0 32 32">
+    <g stroke="currentColor" stroke-width="2.8" fill="none" stroke-linecap="round">
+      <path d="M16 5v8"/><path d="M5 13.5h22"/><path d="M9 19.5h14"/><path d="M13 25.5h6"/>
+    </g>
+  </symbol>
+
+  <!-- 06 a G routed as a single trace, terminating in a via -->
+  <symbol id="m6" viewBox="0 0 32 32">
+    <path d="M22.5 10.5A8.5 8.5 0 1 0 24 17h-6.5" fill="none" stroke="currentColor"
+          stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="17.5" cy="17" r="2.1" fill="currentColor"/>
+  </symbol>
+
+</defs></svg>
+
+<main>
+
+  <section class="band">
+    <div class="wrap">
+      <p class="eyebrow">Internal — logo marks</p>
+      <h1 class="hero__head" style="max-width:20ch">Six marks, judged at the size they actually live at.</h1>
+      <p class="hero__sub">
+        Each row shows the mark at nav size, then 24px, then 16px — the size in a browser tab, where
+        most marks fall apart. Toggle dark to check both. Say a number and I'll wire it in, favicon included.
+      </p>
+    </div>
+  </section>
+
+  <section class="lab">
+    <div class="wrap">
+      <div class="lab__meta">
+        <span class="lab__n">01</span><span class="lab__name">Chip &amp; roots</span>
+        <span class="lab__note">The one I built first. Honest verdict: too many parts. The four chip pins turn to mud at 16px and the symmetry reads like an org chart, not a root system.</span>
+      </div>
+      <div class="ladder">
+        <div class="spec"><span class="spec__k">40px</span><svg class="mk s40"><use href="#m1"/></svg></div>
+        <div class="spec"><span class="spec__k">24px</span><svg class="mk s24"><use href="#m1"/></svg></div>
+        <div class="spec"><span class="spec__k">16px</span><svg class="mk s16"><use href="#m1"/></svg></div>
+        <div class="spec"><span class="spec__k">lockup</span><span class="lock"><svg class="mk s24 mk--sig"><use href="#m1"/></svg>groundwork</span></div>
+        <div class="spec"><span class="spec__k">tab</span><span class="tabbar"><span class="tile tile--sm"><svg><use href="#m1"/></svg></span><span>Groundwork Solutions</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab band--tint">
+    <div class="wrap">
+      <div class="lab__meta">
+        <span class="lab__n">02</span><span class="lab__name">Ground symbol, rooting</span>
+        <span class="lab__note">The electrical earth symbol — literally called <em>ground</em> — with two traces rooting out of the bottom bar into vias. The pun is exact and the top half is already an icon every technical person knows.</span>
+      </div>
+      <div class="ladder">
+        <div class="spec"><span class="spec__k">40px</span><svg class="mk s40"><use href="#m2"/></svg></div>
+        <div class="spec"><span class="spec__k">24px</span><svg class="mk s24"><use href="#m2"/></svg></div>
+        <div class="spec"><span class="spec__k">16px</span><svg class="mk s16"><use href="#m2"/></svg></div>
+        <div class="spec"><span class="spec__k">lockup</span><span class="lock"><svg class="mk s24 mk--sig"><use href="#m2"/></svg>groundwork</span></div>
+        <div class="spec"><span class="spec__k">tab</span><span class="tabbar"><span class="tile tile--sm"><svg><use href="#m2"/></svg></span><span>Groundwork Solutions</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab">
+    <div class="wrap">
+      <div class="lab__meta">
+        <span class="lab__n">03</span><span class="lab__name">Root trace, asymmetric</span>
+        <span class="lab__note">No chip, no box — just a root system routed the way a board is routed, branching off-centre so it reads organic rather than diagrammatic.</span>
+      </div>
+      <div class="ladder">
+        <div class="spec"><span class="spec__k">40px</span><svg class="mk s40"><use href="#m3"/></svg></div>
+        <div class="spec"><span class="spec__k">24px</span><svg class="mk s24"><use href="#m3"/></svg></div>
+        <div class="spec"><span class="spec__k">16px</span><svg class="mk s16"><use href="#m3"/></svg></div>
+        <div class="spec"><span class="spec__k">lockup</span><span class="lock"><svg class="mk s24 mk--sig"><use href="#m3"/></svg>groundwork</span></div>
+        <div class="spec"><span class="spec__k">tab</span><span class="tabbar"><span class="tile tile--sm"><svg><use href="#m3"/></svg></span><span>Groundwork Solutions</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab band--tint">
+    <div class="wrap">
+      <div class="lab__meta">
+        <span class="lab__n">04</span><span class="lab__name">Rooted, enclosed</span>
+        <span class="lab__note">The root splay inside a rounded square. The container does the work at small sizes, which makes this the safest favicon of the six — at the cost of looking a bit like every app icon.</span>
+      </div>
+      <div class="ladder">
+        <div class="spec"><span class="spec__k">40px</span><svg class="mk s40"><use href="#m4"/></svg></div>
+        <div class="spec"><span class="spec__k">24px</span><svg class="mk s24"><use href="#m4"/></svg></div>
+        <div class="spec"><span class="spec__k">16px</span><svg class="mk s16"><use href="#m4"/></svg></div>
+        <div class="spec"><span class="spec__k">lockup</span><span class="lock"><svg class="mk s24 mk--sig"><use href="#m4"/></svg>groundwork</span></div>
+        <div class="spec"><span class="spec__k">tab</span><span class="tabbar"><span class="tile tile--sm"><svg><use href="#m4"/></svg></span><span>Groundwork Solutions</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab">
+    <div class="wrap">
+      <div class="lab__meta">
+        <span class="lab__n">05</span><span class="lab__name">Pure ground</span>
+        <span class="lab__note">The earth symbol and nothing else. Four strokes. Survives 16px better than anything else here and is the only one you could draw from memory — but it gives up the roots idea entirely.</span>
+      </div>
+      <div class="ladder">
+        <div class="spec"><span class="spec__k">40px</span><svg class="mk s40"><use href="#m5"/></svg></div>
+        <div class="spec"><span class="spec__k">24px</span><svg class="mk s24"><use href="#m5"/></svg></div>
+        <div class="spec"><span class="spec__k">16px</span><svg class="mk s16"><use href="#m5"/></svg></div>
+        <div class="spec"><span class="spec__k">lockup</span><span class="lock"><svg class="mk s24 mk--sig"><use href="#m5"/></svg>groundwork</span></div>
+        <div class="spec"><span class="spec__k">tab</span><span class="tabbar"><span class="tile tile--sm"><svg><use href="#m5"/></svg></span><span>Groundwork Solutions</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab band--tint">
+    <div class="wrap">
+      <div class="lab__meta">
+        <span class="lab__n">06</span><span class="lab__name">G, routed</span>
+        <span class="lab__note">A monogram drawn as one continuous trace ending in a via. Most conventional of the six, and the most likely to be mistaken for a generic tech logo — included as the safe option.</span>
+      </div>
+      <div class="ladder">
+        <div class="spec"><span class="spec__k">40px</span><svg class="mk s40"><use href="#m6"/></svg></div>
+        <div class="spec"><span class="spec__k">24px</span><svg class="mk s24"><use href="#m6"/></svg></div>
+        <div class="spec"><span class="spec__k">16px</span><svg class="mk s16"><use href="#m6"/></svg></div>
+        <div class="spec"><span class="spec__k">lockup</span><span class="lock"><svg class="mk s24 mk--sig"><use href="#m6"/></svg>groundwork</span></div>
+        <div class="spec"><span class="spec__k">tab</span><span class="tabbar"><span class="tile tile--sm"><svg><use href="#m6"/></svg></span><span>Groundwork Solutions</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2 class="cta__head">Which mark?</h2>
+      <p class="cta__sub">Say a number and I'll wire it into the nav, the footer, and the favicon — or tell me what's wrong with the closest one and I'll redraw it.</p>
+    </div>
+  </section>
+
+</main>
+
+<script src="../script.js"></script>
+</body>
+</html>

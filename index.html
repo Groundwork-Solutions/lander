@@ -3,258 +3,464 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Groundwork Solutions</title>
-<meta name="description" content="Groundwork Solutions builds custom AI agents for small and mid-sized companies — ticket support, booking, reception, and lead sourcing that run without you.">
+<title>Groundwork Solutions — AI agents for small and mid-sized companies</title>
+<meta name="description" content="Groundwork Solutions builds custom AI agents for small and mid-sized companies — ticket support, booking, reception, and lead sourcing that run without you. One monthly retainer, first agent live in six weeks.">
 <meta property="og:title" content="Groundwork Solutions">
 <meta property="og:description" content="Custom AI agents for small and mid-sized companies. Built, deployed, and tuned in weeks — not quarters.">
 <meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="mask-icon" href="favicon.svg" color="#1B44E0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap">
+<script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<canvas id="field" aria-hidden="true"></canvas>
 <a class="skip" href="#what">skip to content</a>
 
 <header class="nav">
   <a class="nav__mark" href="#top" aria-label="Groundwork Solutions, home">
-    <span class="nav__glyph" aria-hidden="true">▚</span>
+    <span class="nav__glyph" aria-hidden="true">
+      <!-- root trace: a root system routed the way a board is routed,
+           branching off-centre so it reads organic, terminating in vias -->
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 3v9"/>
+          <path d="M16 12 8.5 19.5v4"/>
+          <path d="M16 12v6"/>
+          <path d="M16 18 22 24v2.5"/>
+          <path d="M16 18v8.5"/>
+          <path d="M12.2 15.8H9"/>
+        </g>
+        <g fill="currentColor">
+          <circle cx="8.5" cy="25.2" r="1.7"/>
+          <circle cx="16" cy="28.2" r="1.7"/>
+          <circle cx="22" cy="28.2" r="1.7"/>
+        </g>
+      </svg>
+    </span>
     <span class="nav__word">groundwork</span>
   </a>
   <nav class="nav__links" aria-label="Primary">
-    <a href="#what">what we do</a>
-    <a href="#how">how it works</a>
-    <a href="#proof">results</a>
-    <a href="#faq">questions</a>
+    <a href="#why">Why agents</a>
+    <a href="#what">What we build</a>
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">Questions</a>
   </nav>
   <div class="nav__end">
     <button class="toggle" id="theme-toggle" type="button" aria-pressed="false">
       <span class="toggle__label" data-light>dark</span>
       <span class="toggle__label" data-dark>light</span>
     </button>
-    <a class="nav__cta" href="https://calendar.app.google/C2f3wrVxgt5ZZfZe9" target="_blank" rel="noopener">book a call</a>
+    <a class="nav__cta" href="https://calendar.app.google/C2f3wrVxgt5ZZfZe9" target="_blank" rel="noopener">Book a call</a>
   </div>
 </header>
 
 <main id="top">
 
-  <!-- ── signature marquee pair, counter-scrolling ───────────────────── -->
-  <section class="banners" aria-hidden="true">
-    <div class="banner banner--signal">
-      <div class="banner__track">
-        <span class="banner__unit">ai that does the work<i>▚</i>not the talking<i>▚</i></span>
-        <span class="banner__unit">ai that does the work<i>▚</i>not the talking<i>▚</i></span>
-        <span class="banner__unit">ai that does the work<i>▚</i>not the talking<i>▚</i></span>
-        <span class="banner__unit">ai that does the work<i>▚</i>not the talking<i>▚</i></span>
-      </div>
-    </div>
-    <div class="banner banner--void">
-      <div class="banner__track banner__track--rev">
-        <span class="banner__unit">answer<i>▚</i>book<i>▚</i>chase<i>▚</i>close<i>▚</i></span>
-        <span class="banner__unit">answer<i>▚</i>book<i>▚</i>chase<i>▚</i>close<i>▚</i></span>
-        <span class="banner__unit">answer<i>▚</i>book<i>▚</i>chase<i>▚</i>close<i>▚</i></span>
-        <span class="banner__unit">answer<i>▚</i>book<i>▚</i>chase<i>▚</i>close<i>▚</i></span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── manifesto ───────────────────────────────────────────────────── -->
-  <section class="hero band">
+  <!-- ── hero ─────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <canvas id="pipeline" aria-hidden="true"></canvas>
     <div class="wrap">
-      <p class="eyebrow reveal">groundwork solutions — applied ai for small &amp; mid-sized companies</p>
-      <h1 class="hero__head reveal">you don't have an ai problem. you have a nobody built it for you problem.</h1>
-      <div class="prose">
-        <p class="reveal">Every week the same work comes back around. The same five answers typed into the same inbox. Bookings juggled across voicemail, text, and a paper calendar. Leads that went cold because nobody got to them by Thursday. It isn't that your team is slow. It's that the work never stops arriving.</p>
-        <p class="reveal">The tools sold to fix this were built for companies with a thousand seats and an internal platform team. You were handed the same software, the same six-figure quote, and a year of onboarding — then asked to change how you operate to suit it. Most owners take one look and go back to doing it by hand. That is a rational decision, and it is costing you a person's worth of hours a week.</p>
-        <p class="reveal">We build the other thing. Custom AI agents that plug into the systems you already run — your inbox, your calendar, your CRM, your phone line — and take the repeating work off your desk. Not a chatbot bolted to your homepage. Agents that read the ticket, make the call, book the slot, chase the lead, and hand you the exceptions.</p>
-        <p class="reveal">Small and mid-sized companies are the right size for this. The decision is one conversation, not one committee. You know exactly which work is killing you. And you'll feel the difference the week it ships.</p>
+      <p class="eyebrow reveal">Applied AI for small &amp; mid-sized companies</p>
+      <h1 class="hero__head reveal">AI that does the work, not the talking.</h1>
+      <p class="hero__sub reveal">
+        Custom agents that plug into the inbox, calendar, CRM, and phone line you already run —
+        and take the repeating work off your desk. Your first agent is live in six weeks.
+      </p>
+      <div class="hero__actions reveal">
+        <a class="btn" href="https://calendar.app.google/C2f3wrVxgt5ZZfZe9" target="_blank" rel="noopener">Book a fit call</a>
+        <a class="btn btn--line" href="#what">See what we build</a>
       </div>
-      <p class="reveal"><a class="arrow" href="#what">see what we build</a></p>
+      <p class="hero__trust reveal">
+        <span><i aria-hidden="true">▚</i> One monthly retainer</span>
+        <span><i aria-hidden="true">▚</i> No build fees</span>
+        <span><i aria-hidden="true">▚</i> Straight answers</span>
+      </p>
     </div>
   </section>
 
-  <!-- ── services ────────────────────────────────────────────────────── -->
-  <section class="band band--tint" id="what">
-    <div class="wrap">
-      <header class="sec">
-        <p class="eyebrow reveal">what we do</p>
-        <h2 class="sec__head reveal">six agents that earn their seat</h2>
-        <p class="sec__sub reveal">Each one is built for your business, on your data, inside your stack. Start with one. Most clients add a second within a quarter.</p>
-      </header>
-      <div class="grid grid--3 reveal">
-
-        <article class="cell">
-          <p class="cell__tag">support</p>
-          <h3 class="cell__head">agentic ticket support</h3>
-          <p class="cell__body">Reads every inbound ticket, pulls the real answer from your docs and order history, and replies in your voice. Escalates the genuinely hard ones with the context already attached.</p>
-          <ul class="cell__list">
-            <li>first-touch replies, day and night</li>
-            <li>refunds, status, and returns handled end to end</li>
-            <li>a human handoff that isn't a cold start</li>
-          </ul>
-        </article>
-
-        <article class="cell">
-          <p class="cell__tag">scheduling</p>
-          <h3 class="cell__head">agentic booking</h3>
-          <p class="cell__body">Takes a request in plain language — email, SMS, web — checks real availability across your team, books it, confirms it, and reschedules when plans change.</p>
-          <ul class="cell__list">
-            <li>no double-bookings, no back-and-forth</li>
-            <li>reminders that cut no-shows</li>
-            <li>writes straight to your existing calendar</li>
-          </ul>
-        </article>
-
-        <article class="cell">
-          <p class="cell__tag">voice</p>
-          <h3 class="cell__head">ai receptionist</h3>
-          <p class="cell__body">Answers the phone on the first ring, every ring. Qualifies the caller, answers what it can, books what it should, and routes the rest to the right person with a written summary.</p>
-          <ul class="cell__list">
-            <li>after-hours and overflow coverage</li>
-            <li>every call transcribed and summarized</li>
-            <li>speaks your services, prices, and policies</li>
-          </ul>
-        </article>
-
-        <article class="cell">
-          <p class="cell__tag">growth</p>
-          <h3 class="cell__head">agentic lead finder</h3>
-          <p class="cell__body">Works your definition of a good customer, finds companies that match, verifies the contact, and drafts an opener grounded in something actually true about them.</p>
-          <ul class="cell__list">
-            <li>a fresh, researched list every morning</li>
-            <li>signal-based triggers, not scraped lists</li>
-            <li>follow-up that doesn't quit at email one</li>
-          </ul>
-        </article>
-
-        <article class="cell">
-          <p class="cell__tag">back office</p>
-          <h3 class="cell__head">document &amp; invoice automation</h3>
-          <p class="cell__body">Pulls the numbers off invoices, POs, and forms, checks them against what you expected, and posts them where they belong. Flags only what looks wrong.</p>
-          <ul class="cell__list">
-            <li>no more manual re-keying</li>
-            <li>exception queues instead of full review</li>
-            <li>works with your accounting system</li>
-          </ul>
-        </article>
-
-        <article class="cell">
-          <p class="cell__tag">internal</p>
-          <h3 class="cell__head">internal knowledge agent</h3>
-          <p class="cell__body">Everything your team keeps asking each other — pricing rules, warranty terms, which vendor, what the process is — answered instantly from your own files, with the source cited.</p>
-          <ul class="cell__list">
-            <li>onboards new hires in days</li>
-            <li>lives in Slack, Teams, or the browser</li>
-            <li>answers cite the document they came from</li>
-          </ul>
-        </article>
-
-      </div>
-      <p class="note reveal">Something else eating your week? That's the usual starting point. <a class="arrow" href="#contact">tell us what it is</a></p>
-    </div>
-  </section>
-
-  <div class="banner banner--void banner--rule" aria-hidden="true">
+  <div class="banner banner--signal" aria-hidden="true">
     <div class="banner__track">
-      <span class="banner__unit">audit<i>▚</i>blueprint<i>▚</i>build<i>▚</i>run<i>▚</i></span>
-      <span class="banner__unit">audit<i>▚</i>blueprint<i>▚</i>build<i>▚</i>run<i>▚</i></span>
-      <span class="banner__unit">audit<i>▚</i>blueprint<i>▚</i>build<i>▚</i>run<i>▚</i></span>
-      <span class="banner__unit">audit<i>▚</i>blueprint<i>▚</i>build<i>▚</i>run<i>▚</i></span>
+      <span class="banner__unit">answer<i>▚</i>book<i>▚</i>chase<i>▚</i>close<i>▚</i></span>
     </div>
   </div>
 
-  <!-- ── process (a real sequence, hence the numbering) ───────────────── -->
+  <!-- ── why ──────────────────────────────────────────────────────────── -->
+  <section class="band" id="why">
+    <div class="wrap">
+      <header class="sec">
+        <p class="eyebrow reveal">The problem</p>
+        <h2 class="sec__head reveal">You don't have an AI problem. You have a nobody-built-it-for-you problem.</h2>
+        <p class="sec__sub reveal">
+          The tools sold to fix this were built for companies with a thousand seats and an internal
+          platform team. You got the same software, the same six-figure quote, and a year of onboarding.
+        </p>
+      </header>
+      <div class="grid grid--3">
+        <article class="cell reveal">
+          <span class="cell__icon" aria-hidden="true">▚</span>
+          <h3 class="cell__head">The work never stops arriving</h3>
+          <p class="cell__body">
+            The same five answers typed into the same inbox. Bookings juggled across voicemail, text,
+            and a paper calendar. Leads that went cold because nobody got to them by Thursday. It isn't
+            that your team is slow.
+          </p>
+        </article>
+        <article class="cell reveal">
+          <span class="cell__icon" aria-hidden="true">▚</span>
+          <h3 class="cell__head">Enterprise software doesn't fit</h3>
+          <p class="cell__body">
+            Most owners take one look at the quote and the onboarding plan and go back to doing it by
+            hand. That is a rational decision — and it is quietly costing you a person's worth of hours
+            every week.
+          </p>
+        </article>
+        <article class="cell reveal">
+          <span class="cell__icon" aria-hidden="true">▚</span>
+          <h3 class="cell__head">Staying small is the flex</h3>
+          <p class="cell__body">
+            The decision is one conversation, not one committee. And the goal isn't a bigger org chart —
+            it's the same twelve people handling three times the volume without anyone working a Sunday.
+            You'll feel the difference the week it ships.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── agents, as tabs ──────────────────────────────────────────────── -->
+  <section class="band band--tint" id="what">
+    <div class="wrap">
+      <header class="sec">
+        <p class="eyebrow reveal">What we build</p>
+        <h2 class="sec__head reveal">Six agents that earn their seat</h2>
+        <p class="sec__sub reveal">
+          Each one is built for your business, on your data, inside your stack. Start with one —
+          most clients add a second within a quarter.
+        </p>
+      </header>
+
+      <div class="tabs reveal" role="tablist" aria-label="Agents">
+        <button class="tab" role="tab" id="tab-support"  aria-controls="panel-support"  aria-selected="true"  type="button">Ticket support</button>
+        <button class="tab" role="tab" id="tab-booking"  aria-controls="panel-booking"  aria-selected="false" type="button" tabindex="-1">Booking</button>
+        <button class="tab" role="tab" id="tab-voice"    aria-controls="panel-voice"    aria-selected="false" type="button" tabindex="-1">Receptionist</button>
+        <button class="tab" role="tab" id="tab-leads"    aria-controls="panel-leads"    aria-selected="false" type="button" tabindex="-1">Lead finder</button>
+        <button class="tab" role="tab" id="tab-docs"     aria-controls="panel-docs"     aria-selected="false" type="button" tabindex="-1">Invoices &amp; documents</button>
+        <button class="tab" role="tab" id="tab-internal" aria-controls="panel-internal" aria-selected="false" type="button" tabindex="-1">Internal knowledge</button>
+      </div>
+
+      <div class="panel" id="panel-support" role="tabpanel" aria-labelledby="tab-support" data-active>
+        <div>
+          <h3 class="panel__head">Agentic ticket support</h3>
+          <p class="panel__body">
+            Reads every inbound ticket, pulls the real answer from your docs and order history, and
+            replies in your voice. Escalates the genuinely hard ones with the context already attached.
+          </p>
+          <ul class="panel__list">
+            <li>First-touch replies, day and night</li>
+            <li>Refunds, status, and returns handled end to end</li>
+            <li>A human handoff that isn't a cold start</li>
+          </ul>
+          <a class="arrow" href="#contact">Talk through your inbox</a>
+        </div>
+        <div class="flow">
+          <div class="flow__row"><span class="flow__k">in</span><span class="flow__v">“Where's my order? #48812”</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row"><span class="flow__k">agent</span><span class="flow__v">Reads order history + policy docs</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row flow__row--out"><span class="flow__k">out</span><span class="flow__v">Reply sent in 90 seconds, ticket closed</span></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-booking" role="tabpanel" aria-labelledby="tab-booking">
+        <div>
+          <h3 class="panel__head">Agentic booking</h3>
+          <p class="panel__body">
+            Takes a request in plain language — email, SMS, web — checks real availability across your
+            team, books it, confirms it, and reschedules when plans change.
+          </p>
+          <ul class="panel__list">
+            <li>No double-bookings, no back-and-forth</li>
+            <li>Reminders that cut no-shows</li>
+            <li>Writes straight to your existing calendar</li>
+          </ul>
+          <a class="arrow" href="#contact">Talk through your calendar</a>
+        </div>
+        <div class="flow">
+          <div class="flow__row"><span class="flow__k">in</span><span class="flow__v">“Any chance Thursday afternoon?”</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row"><span class="flow__k">agent</span><span class="flow__v">Checks crew availability + travel time</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row flow__row--out"><span class="flow__k">out</span><span class="flow__v">Booked 2pm, confirmed, reminder queued</span></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-voice" role="tabpanel" aria-labelledby="tab-voice">
+        <div>
+          <h3 class="panel__head">AI receptionist</h3>
+          <p class="panel__body">
+            Answers the phone on the first ring, every ring. Qualifies the caller, answers what it can,
+            books what it should, and routes the rest to the right person with a written summary.
+          </p>
+          <ul class="panel__list">
+            <li>After-hours and overflow coverage</li>
+            <li>Every call transcribed and summarized</li>
+            <li>Speaks your services, prices, and policies</li>
+          </ul>
+          <a class="arrow" href="#contact">Talk through your phone line</a>
+        </div>
+        <div class="flow">
+          <div class="flow__row"><span class="flow__k">in</span><span class="flow__v">Inbound call, 7:40pm Sunday</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row"><span class="flow__k">agent</span><span class="flow__v">Answers, qualifies, checks the diary</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row flow__row--out"><span class="flow__k">out</span><span class="flow__v">Job booked + summary texted to you</span></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-leads" role="tabpanel" aria-labelledby="tab-leads">
+        <div>
+          <h3 class="panel__head">Agentic lead finder</h3>
+          <p class="panel__body">
+            Works your definition of a good customer, finds companies that match, verifies the contact,
+            and drafts an opener grounded in something actually true about them.
+          </p>
+          <ul class="panel__list">
+            <li>A fresh, researched list every morning</li>
+            <li>Signal-based triggers, not scraped lists</li>
+            <li>Follow-up that doesn't quit at email one</li>
+          </ul>
+          <a class="arrow" href="#contact">Talk through your pipeline</a>
+        </div>
+        <div class="flow">
+          <div class="flow__row"><span class="flow__k">in</span><span class="flow__v">Your ten best customers</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row"><span class="flow__k">agent</span><span class="flow__v">Finds matches, verifies contacts, researches</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row flow__row--out"><span class="flow__k">out</span><span class="flow__v">Researched list + drafted openers, daily</span></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-docs" role="tabpanel" aria-labelledby="tab-docs">
+        <div>
+          <h3 class="panel__head">Document &amp; invoice automation</h3>
+          <p class="panel__body">
+            Pulls the numbers off invoices, POs, and forms, checks them against what you expected, and
+            posts them where they belong. Flags only what looks wrong.
+          </p>
+          <ul class="panel__list">
+            <li>No more manual re-keying</li>
+            <li>Exception queues instead of full review</li>
+            <li>Works with your accounting system</li>
+          </ul>
+          <a class="arrow" href="#contact">Talk through your back office</a>
+        </div>
+        <div class="flow">
+          <div class="flow__row"><span class="flow__k">in</span><span class="flow__v">Supplier invoice PDF, 14 line items</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row"><span class="flow__k">agent</span><span class="flow__v">Extracts, matches against the PO</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row flow__row--out"><span class="flow__k">out</span><span class="flow__v">Posted to accounts — one line flagged</span></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-internal" role="tabpanel" aria-labelledby="tab-internal">
+        <div>
+          <h3 class="panel__head">Internal knowledge agent</h3>
+          <p class="panel__body">
+            Everything your team keeps asking each other — pricing rules, warranty terms, which vendor,
+            what the process is — answered instantly from your own files, with the source cited.
+          </p>
+          <ul class="panel__list">
+            <li>Onboards new hires in days</li>
+            <li>Lives in Slack, Teams, or the browser</li>
+            <li>Answers cite the document they came from</li>
+          </ul>
+          <a class="arrow" href="#contact">Talk through your documentation</a>
+        </div>
+        <div class="flow">
+          <div class="flow__row"><span class="flow__k">in</span><span class="flow__v">“What's the warranty on the RX-40?”</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row"><span class="flow__k">agent</span><span class="flow__v">Searches your manuals and price lists</span></div>
+          <p class="flow__arrow" aria-hidden="true">↓</p>
+          <div class="flow__row flow__row--out"><span class="flow__k">out</span><span class="flow__v">“3 years parts” + link to page 14</span></div>
+        </div>
+      </div>
+
+      <p class="note reveal">
+        Something else eating your week? That's the usual starting point.
+        <a class="arrow" href="#contact">Tell us what it is</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ── process ──────────────────────────────────────────────────────── -->
   <section class="band" id="how">
     <div class="wrap">
       <header class="sec">
-        <p class="eyebrow reveal">how it works</p>
-        <h2 class="sec__head reveal">first agent live in six weeks</h2>
-        <p class="sec__sub reveal">A fixed sequence with a fixed price at each stage. You can stop after any one of them and keep what we've built.</p>
+        <p class="eyebrow reveal">How it works</p>
+        <h2 class="sec__head reveal">First agent live in six weeks</h2>
+        <p class="sec__sub reveal">
+          A fixed sequence, all of it inside the same monthly retainer. You'll know exactly what's
+          shipping before each stage starts.
+        </p>
       </header>
       <ol class="steps reveal">
         <li class="step">
           <span class="step__n">01</span>
-          <div class="step__body">
-            <h3 class="step__head">audit</h3>
-            <p>We sit with your team for two days and follow the work — where it queues, who unblocks it, what it costs you. You get a written map of every process worth automating, ranked by hours returned.</p>
-          </div>
-          <span class="step__when">week 1</span>
+          <h3 class="step__head">Audit</h3>
+          <p class="step__body">
+            We sit with your team for two days and follow the work — where it queues, who unblocks it,
+            what it costs. You get a written map of every process worth automating, ranked by hours returned.
+          </p>
+          <span class="step__when">Week 1</span>
         </li>
         <li class="step">
           <span class="step__n">02</span>
-          <div class="step__body">
-            <h3 class="step__head">blueprint</h3>
-            <p>We pick one process and spec the agent against it: what it can decide alone, what it must escalate, which systems it touches, and how we'll know it's working. Fixed scope, fixed price, before a line of code.</p>
-          </div>
-          <span class="step__when">week 2</span>
+          <h3 class="step__head">Blueprint</h3>
+          <p class="step__body">
+            We pick one process and spec the agent against it: what it can decide alone, what it must
+            escalate, which systems it touches, and how we'll know it's working. Agreed in writing before any code.
+          </p>
+          <span class="step__when">Week 2</span>
         </li>
         <li class="step">
           <span class="step__n">03</span>
-          <div class="step__body">
-            <h3 class="step__head">build</h3>
-            <p>We build it on your data and run it in shadow mode beside your team — it drafts, they send — until its judgment matches theirs. Then we let it go live on the easy half of the volume.</p>
-          </div>
-          <span class="step__when">weeks 3&ndash;6</span>
+          <h3 class="step__head">Build</h3>
+          <p class="step__body">
+            We build it on your data and run it in shadow mode beside your team — it drafts, they send —
+            until its judgment matches theirs. Then it goes live on the easy half of the volume.
+          </p>
+          <span class="step__when">Weeks 3–6</span>
         </li>
         <li class="step">
           <span class="step__n">04</span>
-          <div class="step__body">
-            <h3 class="step__head">run &amp; tune</h3>
-            <p>Live agents drift when your business changes. We watch the escalation rate, retrain on the exceptions, and send you a monthly note on what it handled and what it handed back.</p>
-          </div>
-          <span class="step__when">ongoing</span>
+          <h3 class="step__head">Run &amp; tune</h3>
+          <p class="step__body">
+            Live agents drift when your business changes. We watch the escalation rate, retrain on the
+            exceptions, and send a monthly note on what it handled and what it handed back.
+          </p>
+          <span class="step__when">Ongoing</span>
         </li>
       </ol>
     </div>
   </section>
 
-  <!-- ── stats: PLACEHOLDER FIGURES — replace with your own before launch -->
+  <!-- ── pricing ──────────────────────────────────────────────────────── -->
+  <section class="band band--tint" id="pricing">
+    <div class="wrap">
+      <header class="sec">
+        <p class="eyebrow reveal">Pricing</p>
+        <h2 class="sec__head reveal">One monthly retainer. That's the whole model.</h2>
+        <p class="sec__sub reveal">
+          No build fee, no setup cost, no per-seat licensing, no usage billing. You get a
+          forward-deployed engineer who audits, builds, and keeps it running.
+        </p>
+      </header>
+      <div class="price reveal">
+        <div class="price__cell">
+          <p class="price__k">How you pay</p>
+          <p class="price__v">One monthly retainer</p>
+          <p class="price__n">No build fee, no setup cost, no per-seat pricing. One number every month.</p>
+        </div>
+        <div class="price__cell">
+          <p class="price__k">What it covers</p>
+          <p class="price__v">Your forward-deployed engineer</p>
+          <p class="price__n">Audit, blueprint, build, and ongoing tuning — the same engineer throughout.</p>
+        </div>
+        <div class="price__cell">
+          <p class="price__k">How you start</p>
+          <p class="price__v">One call, a straight answer</p>
+          <p class="price__n">Twenty minutes, no charge. If an agent can't earn its keep in your business, we'll tell you on that call.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── what we measure ──────────────────────────────────────────────────
+       Deliberately NOT a results claim. These are the four metrics we
+       baseline and report for a client. No invented figures live here. -->
   <section class="stats" id="proof">
     <div class="wrap">
+      <header class="sec sec--onvoid">
+        <p class="eyebrow reveal">What we measure</p>
+        <h2 class="sec__head reveal">The four numbers we put in front of you</h2>
+        <p class="sec__sub reveal">
+          We baseline these in week one, before anything is built, then report them every month.
+          They're the ones that tell you whether the agent is earning its retainer — and we'd run
+          the same measurement on your business.
+        </p>
+      </header>
       <ul class="stats__row">
-        <li><b>71%</b><span>of inbound tickets closed without a human</span></li>
-        <li><b>&lt;1s</b><span>to answer a call, at 2am or at noon</span></li>
-        <li><b>22h</b><span>a week handed back to the average client</span></li>
-        <li><b>6wk</b><span>from first conversation to live agent</span></li>
+        <li>
+          <span class="stats__k">01</span>
+          <b>Resolution rate</b>
+          <span>The share of inbound work the agent handles end to end, with nobody on your team touching it.</span>
+        </li>
+        <li>
+          <span class="stats__k">02</span>
+          <b>Time to first response</b>
+          <span>How fast a customer actually hears back — measured at 2am and at Monday lunchtime, not on average.</span>
+        </li>
+        <li>
+          <span class="stats__k">03</span>
+          <b>Hours returned</b>
+          <span>Time handed back to your team each week, counted against the baseline we take before we build.</span>
+        </li>
+        <li>
+          <span class="stats__k">04</span>
+          <b>Escalation rate</b>
+          <span>How often it correctly hands over. A number that moves here is a signal to retrain, not a failure.</span>
+        </li>
       </ul>
     </div>
   </section>
 
   <!-- ── testimonials: PLACEHOLDER QUOTES — swap for real, attributed ones -->
-  <section class="band band--tint">
+  <section class="band">
     <div class="wrap">
       <header class="sec">
-        <p class="eyebrow reveal">what they say</p>
-        <h2 class="sec__head reveal">from the people who stopped doing it by hand</h2>
+        <p class="eyebrow reveal">What they say</p>
+        <h2 class="sec__head reveal">Count the staff numbers. That's the brag.</h2>
+        <p class="sec__sub reveal">
+          Twelve people. Forty. Eighty-five. Every one of them carrying a workload that ought to need a
+          bigger room. Nobody was replaced — the repeating half of the job just stopped needing a human,
+          and the pile stopped growing. Our clients aren't short-staffed. They're done being the bottleneck.
+        </p>
+        <p class="ph reveal">Placeholder quotes — not real customers</p>
       </header>
-      <div class="grid grid--3 reveal">
-        <figure class="quote">
-          <blockquote>We were drowning in the same forty emails a day. The support agent went live on a Tuesday and by Friday my ops lead had her afternoons back. She's now doing the work I actually hired her for.</blockquote>
-          <figcaption><b>Dana Whitfield</b><span>COO, Harbor Point Supply &middot; 40 staff</span></figcaption>
+      <div class="grid grid--3">
+        <figure class="quote reveal">
+          <blockquote>“We were drowning in the same forty emails a day. The support agent went live on a Tuesday and by Friday my ops lead had her afternoons back. She's now doing the work I actually hired her for.”</blockquote>
+          <figcaption><b>Dana Whitfield</b><span>COO, Harbor Point Supply · 40 staff</span></figcaption>
         </figure>
-        <figure class="quote">
-          <blockquote>I'd been quoted three hundred thousand and eighteen months by an enterprise vendor. Groundwork scoped it in a week and had the receptionist answering calls in five. We haven't missed a booking since.</blockquote>
-          <figcaption><b>Marcus Bell</b><span>Owner, Bell &amp; Sons HVAC &middot; 12 staff</span></figcaption>
+        <figure class="quote reveal">
+          <blockquote>“I'd been quoted three hundred thousand and eighteen months by an enterprise vendor. Groundwork scoped it in a week and had the receptionist answering calls in five. We haven't missed a booking since.”</blockquote>
+          <figcaption><b>Marcus Bell</b><span>Owner, Bell &amp; Sons HVAC · 12 staff</span></figcaption>
         </figure>
-        <figure class="quote">
-          <blockquote>The lead agent found us eleven qualified accounts in month one, two of which closed. What sold me was that it stopped guessing — every opener referenced something real about the company.</blockquote>
-          <figcaption><b>Priya Raghunathan</b><span>VP Revenue, Latchkey Logistics &middot; 85 staff</span></figcaption>
+        <figure class="quote reveal">
+          <blockquote>“The lead agent found us eleven qualified accounts in month one, two of which closed. What sold me was that it stopped guessing — every opener referenced something real about the company.”</blockquote>
+          <figcaption><b>Priya Raghunathan</b><span>VP Revenue, Latchkey Logistics · 85 staff</span></figcaption>
         </figure>
       </div>
     </div>
   </section>
 
-  <!-- ── objections ──────────────────────────────────────────────────── -->
-  <section class="band" id="faq">
+  <!-- ── objections ───────────────────────────────────────────────────── -->
+  <section class="band band--tint" id="faq">
     <div class="wrap wrap--narrow">
-      <header class="sec">
-        <p class="eyebrow reveal">straight answers</p>
-        <h2 class="sec__head reveal">the four things everyone asks</h2>
+      <header class="sec sec--center">
+        <p class="eyebrow reveal">Straight answers</p>
+        <h2 class="sec__head reveal">The four things everyone asks</h2>
       </header>
       <dl class="faq reveal">
         <div class="faq__item">
           <dt>What does this actually cost?</dt>
-          <dd>The audit is a flat fee and stands alone — you keep the map whether or not you build with us. Each agent is quoted as a fixed build plus a monthly run fee, and both numbers are on the table before the blueprint is signed. No seat licences, no usage surprises.</dd>
+          <dd>One monthly retainer, quoted before you commit — it covers the engineer, the audit, the build, and keeping it running. There's no build fee, no setup cost, no seat licences, and no usage billing. The number we quote you is the number you pay.</dd>
         </div>
         <div class="faq__item">
           <dt>Where does our data go?</dt>
@@ -266,19 +472,22 @@
         </div>
         <div class="faq__item">
           <dt>Do we need someone technical on our side?</dt>
-          <dd>No. You need one person who knows the process well enough to say when the agent is wrong. We handle the integrations, the hosting, and the upkeep. If you'd rather own it outright, we'll hand over the code and document it.</dd>
+          <dd>No. You need one person who knows the process well enough to say when the agent is wrong — that's the whole ask. We handle the integrations, the hosting, the monitoring, and the upkeep.</dd>
         </div>
       </dl>
     </div>
   </section>
 
-  <!-- ── cta ─────────────────────────────────────────────────────────── -->
+  <!-- ── cta ──────────────────────────────────────────────────────────── -->
   <section class="cta" id="contact">
     <div class="wrap">
-      <h2 class="cta__head">tell us which twenty hours a week you want back.</h2>
-      <p class="cta__sub">Twenty minutes on a call. You describe the work that keeps coming back; we tell you honestly whether an agent can take it — and what it would cost. If the answer is no, we'll say so.</p>
+      <h2 class="cta__head">Tell us which twenty hours a week you want back.</h2>
+      <p class="cta__sub">
+        Twenty minutes on a call. You describe the work that keeps coming back; we tell you honestly
+        whether an agent can take it — and what it would cost. If the answer is no, we'll say so.
+      </p>
       <div class="cta__row">
-        <a class="btn" href="https://calendar.app.google/C2f3wrVxgt5ZZfZe9" target="_blank" rel="noopener">book a fit call</a>
+        <a class="btn" href="https://calendar.app.google/C2f3wrVxgt5ZZfZe9" target="_blank" rel="noopener">Book a fit call</a>
         <a class="btn btn--ghost" href="mailto:dothan@trygroundworksolutions.com?subject=Groundwork%20Solutions%20enquiry">dothan@trygroundworksolutions.com</a>
       </div>
     </div>
@@ -288,14 +497,28 @@
 
 <footer class="foot">
   <div class="wrap foot__row">
-    <span class="foot__mark"><i aria-hidden="true">▚</i> groundwork solutions</span>
+    <span class="foot__mark">
+      <span class="foot__glyph" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <g stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 3v9"/><path d="M16 12 8.5 19.5v4"/><path d="M16 12v6"/>
+            <path d="M16 18 22 24v2.5"/><path d="M16 18v8.5"/><path d="M12.2 15.8H9"/>
+          </g>
+          <g fill="currentColor">
+            <circle cx="8.5" cy="25.2" r="1.7"/><circle cx="16" cy="28.2" r="1.7"/><circle cx="22" cy="28.2" r="1.7"/>
+          </g>
+        </svg>
+      </span>
+      groundwork solutions
+    </span>
     <nav class="foot__links" aria-label="Footer">
-      <a href="#what">what we do</a>
-      <a href="#how">how it works</a>
-      <a href="#faq">questions</a>
-      <a href="mailto:dothan@trygroundworksolutions.com">contact</a>
+      <a href="#what">What we build</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">Questions</a>
+      <a href="mailto:dothan@trygroundworksolutions.com">Contact</a>
     </nav>
-    <span class="foot__copy">&copy; 2026 groundwork solutions</span>
+    <span class="foot__copy">© 2026 groundwork solutions</span>
   </div>
 </footer>
 

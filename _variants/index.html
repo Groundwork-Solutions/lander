@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Layout models — Groundwork Solutions</title>
+<meta name="description" content="Six ways to present the same section content without card containers. Internal comparison page.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<style>
+/* ── comparison-page chrome ─────────────────────────────────────────── */
+.model{padding-block:clamp(3rem,6vw,5rem);border-bottom:1px solid var(--rule)}
+.model__meta{
+  display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:baseline;
+  margin-bottom:2.5rem;padding-bottom:1rem;border-bottom:1px dashed var(--rule);
+}
+.model__n{
+  font-family:"DM Mono",monospace;font-size:.75rem;letter-spacing:.14em;
+  padding:.3rem .6rem;border-radius:var(--r-pill);
+  background:var(--signal);color:var(--signal-ink);
+}
+.model__name{font-size:var(--step-1);font-weight:700;letter-spacing:-.01em}
+.model__note{font-size:.875rem;color:var(--ink-soft);flex:1 1 22ch;min-width:22ch}
+
+/* ── model 1: numbered editorial rows ───────────────────────────────── */
+.m1{display:flex;flex-direction:column}
+.m1__row{
+  display:grid;grid-template-columns:auto 1fr;gap:.4rem 1.5rem;
+  padding-block:clamp(1.5rem,3vw,2.25rem);border-top:1px solid var(--rule);
+}
+.m1__row:last-child{border-bottom:1px solid var(--rule)}
+.m1__n{
+  font-family:"DM Mono",monospace;font-size:.8125rem;letter-spacing:.14em;
+  color:var(--signal);padding-top:.45rem;
+}
+.m1__h{font-size:var(--step-2);margin-bottom:.6rem}
+.m1__p{color:var(--ink-soft);max-width:62ch}
+@media (min-width:820px){.m1__row{grid-template-columns:4rem 1fr}}
+
+/* ── model 2: split rows, label left ────────────────────────────────── */
+.m2{display:flex;flex-direction:column}
+.m2__row{
+  display:grid;gap:.5rem 3rem;
+  padding-block:clamp(1.5rem,3vw,2.25rem);border-top:1px solid var(--rule);
+}
+.m2__row:last-child{border-bottom:1px solid var(--rule)}
+.m2__k{
+  font-family:"DM Mono",monospace;font-size:.75rem;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--ink-soft);padding-top:.35rem;
+}
+.m2__h{font-size:var(--step-2);margin-bottom:.6rem}
+.m2__p{color:var(--ink-soft);max-width:60ch}
+@media (min-width:820px){.m2__row{grid-template-columns:12rem 1fr}}
+
+/* ── model 3: before → after ledger ─────────────────────────────────── */
+.m3{display:flex;flex-direction:column}
+.m3__head{
+  display:none;gap:3rem;padding-bottom:.9rem;border-bottom:1px solid var(--rule);
+  font-family:"DM Mono",monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;
+}
+.m3__head span:first-child{color:var(--ink-soft)}
+.m3__head span:last-child{color:var(--signal)}
+.m3__row{
+  display:grid;gap:.75rem 3rem;align-items:center;
+  padding-block:clamp(1.25rem,2.5vw,1.75rem);border-bottom:1px solid var(--rule);
+}
+.m3__before{color:var(--ink-soft);position:relative;padding-left:1.6rem}
+.m3__before::before{content:"×";position:absolute;left:0;color:var(--ink-soft);opacity:.6;font-size:1.1em}
+.m3__after{font-weight:500;position:relative;padding-left:1.6rem}
+.m3__after::before{content:"▚";position:absolute;left:0;color:var(--signal)}
+@media (min-width:820px){
+  .m3__head{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+  .m3__row{grid-template-columns:1fr 1fr}
+}
+
+/* ── model 4: accordion ─────────────────────────────────────────────── */
+.m4{display:flex;flex-direction:column}
+.m4 details{border-top:1px solid var(--rule)}
+.m4 details:last-of-type{border-bottom:1px solid var(--rule)}
+.m4 summary{
+  display:flex;align-items:center;gap:1rem;cursor:pointer;list-style:none;
+  padding-block:clamp(1.15rem,2.2vw,1.5rem);font-size:var(--step-2);font-weight:700;
+  letter-spacing:-.015em;
+}
+.m4 summary::-webkit-details-marker{display:none}
+.m4 summary::after{
+  content:"+";margin-left:auto;color:var(--signal);font-weight:400;
+  font-size:1.5rem;line-height:1;transition:transform .18s ease;
+}
+.m4 details[open] summary::after{content:"−"}
+.m4 summary:hover{color:var(--signal)}
+.m4__p{color:var(--ink-soft);max-width:62ch;padding-bottom:1.5rem}
+
+/* ── model 5: big-type manifesto ────────────────────────────────────── */
+.m5{max-width:24ch}
+.m5__line{
+  font-size:clamp(1.6rem,1rem + 2.6vw,2.9rem);font-weight:700;
+  line-height:1.2;letter-spacing:-.025em;max-width:20ch;
+}
+.m5__line + .m5__line{margin-top:1.5rem}
+.m5 em{font-style:normal;color:var(--signal)}
+.m5__foot{
+  margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--rule);
+  color:var(--ink-soft);max-width:56ch;font-size:var(--step-1);
+}
+@media (min-width:820px){.m5{max-width:none}}
+
+/* ── model 6: offset alternating blocks ─────────────────────────────── */
+.m6{display:flex;flex-direction:column;gap:clamp(2rem,4vw,3.5rem)}
+.m6__block{max-width:56ch;position:relative;padding-left:1.75rem}
+.m6__block::before{
+  content:"";position:absolute;left:0;top:.55rem;bottom:.2rem;width:2px;
+  background:var(--signal);opacity:.35;
+}
+.m6__k{
+  font-family:"DM Mono",monospace;font-size:.75rem;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--signal);display:block;margin-bottom:.5rem;
+}
+.m6__h{font-size:var(--step-2);margin-bottom:.6rem}
+.m6__p{color:var(--ink-soft)}
+@media (min-width:900px){
+  .m6__block:nth-child(2){margin-left:14%}
+  .m6__block:nth-child(3){margin-left:28%}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="nav__mark" href="../" aria-label="Groundwork Solutions, home">
+    <span class="nav__glyph" aria-hidden="true">▚</span>
+    <span class="nav__word">groundwork</span>
+  </a>
+  <div class="nav__end">
+    <button class="toggle" id="theme-toggle" type="button" aria-pressed="false">
+      <span class="toggle__label" data-light>dark</span>
+      <span class="toggle__label" data-dark>light</span>
+    </button>
+    <a class="nav__cta" href="../">back to the page</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="band">
+    <div class="wrap">
+      <p class="eyebrow">Internal — layout models</p>
+      <h1 class="hero__head" style="max-width:22ch">Six ways to say the same thing without a box around it.</h1>
+      <p class="hero__sub">
+        Identical copy in all six — only the container changes. Model 03 also rewrites the content as
+        pairs, because a before/after layout needs two halves to work. Tell me which one to put on the
+        live page and I'll swap it in.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── 01 ─────────────────────────────────────────────────────────── -->
+  <section class="model">
+    <div class="wrap">
+      <div class="model__meta">
+        <span class="model__n">01</span>
+        <span class="model__name">Numbered editorial rows</span>
+        <span class="model__note">Hairlines instead of boxes. Reads like a document, scales to any number of items, and the numerals give the eye something to grab.</span>
+      </div>
+      <div class="m1">
+        <div class="m1__row">
+          <span class="m1__n">01</span>
+          <div>
+            <h3 class="m1__h">The work never stops arriving</h3>
+            <p class="m1__p">The same five answers typed into the same inbox. Bookings juggled across voicemail, text, and a paper calendar. Leads that went cold because nobody got to them by Thursday. It isn't that your team is slow.</p>
+          </div>
+        </div>
+        <div class="m1__row">
+          <span class="m1__n">02</span>
+          <div>
+            <h3 class="m1__h">Enterprise software doesn't fit</h3>
+            <p class="m1__p">Most owners take one look at the quote and the onboarding plan and go back to doing it by hand. That is a rational decision — and it is quietly costing you a person's worth of hours every week.</p>
+          </div>
+        </div>
+        <div class="m1__row">
+          <span class="m1__n">03</span>
+          <div>
+            <h3 class="m1__h">Staying small is the flex</h3>
+            <p class="m1__p">The decision is one conversation, not one committee. And the goal isn't a bigger org chart — it's the same twelve people handling three times the volume without anyone working a Sunday.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 02 ─────────────────────────────────────────────────────────── -->
+  <section class="model band--tint">
+    <div class="wrap">
+      <div class="model__meta">
+        <span class="model__n">02</span>
+        <span class="model__name">Split rows, label left</span>
+        <span class="model__note">A mono label column parked against generous prose. The most "engineering document" of the six, and the calmest to read at length.</span>
+      </div>
+      <div class="m2">
+        <div class="m2__row">
+          <p class="m2__k">The symptom</p>
+          <div>
+            <h3 class="m2__h">The work never stops arriving</h3>
+            <p class="m2__p">The same five answers typed into the same inbox. Bookings juggled across voicemail, text, and a paper calendar. Leads that went cold because nobody got to them by Thursday.</p>
+          </div>
+        </div>
+        <div class="m2__row">
+          <p class="m2__k">The false fix</p>
+          <div>
+            <h3 class="m2__h">Enterprise software doesn't fit</h3>
+            <p class="m2__p">Most owners take one look at the quote and the onboarding plan and go back to doing it by hand. That is a rational decision — and it is quietly costing you a person's worth of hours every week.</p>
+          </div>
+        </div>
+        <div class="m2__row">
+          <p class="m2__k">The advantage</p>
+          <div>
+            <h3 class="m2__h">Staying small is the flex</h3>
+            <p class="m2__p">The decision is one conversation, not one committee. And the goal isn't a bigger org chart — it's the same twelve people handling three times the volume without anyone working a Sunday.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 03 ─────────────────────────────────────────────────────────── -->
+  <section class="model">
+    <div class="wrap">
+      <div class="model__meta">
+        <span class="model__n">03</span>
+        <span class="model__name">Before → after ledger</span>
+        <span class="model__note">The most persuasive of the six, and my pick for a page whose job is booking calls — the reader scores their own week down the left column.</span>
+      </div>
+      <div class="m3">
+        <div class="m3__head" aria-hidden="true">
+          <span>Your week now</span>
+          <span>Your week with an agent</span>
+        </div>
+        <div class="m3__row">
+          <p class="m3__before">The same five answers, retyped into the same inbox every day.</p>
+          <p class="m3__after">Answered before you've opened the inbox.</p>
+        </div>
+        <div class="m3__row">
+          <p class="m3__before">Bookings juggled across voicemail, text, and a paper calendar.</p>
+          <p class="m3__after">Booked, confirmed, and reminded — without a phone call.</p>
+        </div>
+        <div class="m3__row">
+          <p class="m3__before">Leads that went cold because nobody got to them by Thursday.</p>
+          <p class="m3__after">Followed up on day three and day ten, every time.</p>
+        </div>
+        <div class="m3__row">
+          <p class="m3__before">A six-figure quote and a year of onboarding to fix any of it.</p>
+          <p class="m3__after">One retainer, first agent live in six weeks.</p>
+        </div>
+        <div class="m3__row">
+          <p class="m3__before">More volume means another hire.</p>
+          <p class="m3__after">Same twelve people, three times the volume, nobody working Sunday.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 04 ─────────────────────────────────────────────────────────── -->
+  <section class="model band--tint">
+    <div class="wrap wrap--narrow">
+      <div class="model__meta">
+        <span class="model__n">04</span>
+        <span class="model__name">Accordion</span>
+        <span class="model__note">Three headlines you can scan in two seconds, prose only if you want it. Best if this section keeps growing. Native &lt;details&gt; — works with no JavaScript.</span>
+      </div>
+      <div class="m4">
+        <details open>
+          <summary>The work never stops arriving</summary>
+          <p class="m4__p">The same five answers typed into the same inbox. Bookings juggled across voicemail, text, and a paper calendar. Leads that went cold because nobody got to them by Thursday. It isn't that your team is slow.</p>
+        </details>
+        <details>
+          <summary>Enterprise software doesn't fit</summary>
+          <p class="m4__p">Most owners take one look at the quote and the onboarding plan and go back to doing it by hand. That is a rational decision — and it is quietly costing you a person's worth of hours every week.</p>
+        </details>
+        <details>
+          <summary>Staying small is the flex</summary>
+          <p class="m4__p">The decision is one conversation, not one committee. And the goal isn't a bigger org chart — it's the same twelve people handling three times the volume without anyone working a Sunday.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 05 ─────────────────────────────────────────────────────────── -->
+  <section class="model">
+    <div class="wrap">
+      <div class="model__meta">
+        <span class="model__n">05</span>
+        <span class="model__name">Big-type manifesto</span>
+        <span class="model__note">No structure at all — three statements at display size with the turn of each phrase in signal blue. Highest impact, lowest information density.</span>
+      </div>
+      <div class="m5">
+        <p class="m5__line">The work never stops arriving. <em>That isn't your team being slow.</em></p>
+        <p class="m5__line">The software built to fix it wants six figures and a year. <em>So you do it by hand.</em></p>
+        <p class="m5__line">The goal was never a bigger org chart. <em>It was a quieter Sunday.</em></p>
+        <p class="m5__foot">The same five answers typed into the same inbox. Bookings juggled across voicemail, text, and a paper calendar. Leads that went cold because nobody got to them by Thursday. We build the agents that take that half of the week off your desk.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 06 ─────────────────────────────────────────────────────────── -->
+  <section class="model band--tint">
+    <div class="wrap">
+      <div class="model__meta">
+        <span class="model__n">06</span>
+        <span class="model__name">Offset stepped blocks</span>
+        <span class="model__note">A thin signal rule instead of a border, each block stepping further right. Gives the section a sense of progression without drawing a single box.</span>
+      </div>
+      <div class="m6">
+        <div class="m6__block">
+          <span class="m6__k">01 — the symptom</span>
+          <h3 class="m6__h">The work never stops arriving</h3>
+          <p class="m6__p">The same five answers typed into the same inbox. Bookings juggled across voicemail, text, and a paper calendar. Leads that went cold because nobody got to them by Thursday.</p>
+        </div>
+        <div class="m6__block">
+          <span class="m6__k">02 — the false fix</span>
+          <h3 class="m6__h">Enterprise software doesn't fit</h3>
+          <p class="m6__p">Most owners take one look at the quote and the onboarding plan and go back to doing it by hand. That is a rational decision — and it is quietly costing you a person's worth of hours every week.</p>
+        </div>
+        <div class="m6__block">
+          <span class="m6__k">03 — the advantage</span>
+          <h3 class="m6__h">Staying small is the flex</h3>
+          <p class="m6__p">The decision is one conversation, not one committee. And the goal isn't a bigger org chart — it's the same twelve people handling three times the volume without anyone working a Sunday.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2 class="cta__head">Which one goes on the page?</h2>
+      <p class="cta__sub">Say the number. I'll swap it into the live section and apply the same treatment to the pricing strip and the process steps so the whole page stops looking like a grid of boxes.</p>
+    </div>
+  </section>
+
+</main>
+
+<script src="../script.js"></script>
+</body>
+</html>

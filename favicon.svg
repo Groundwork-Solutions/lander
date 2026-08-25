@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Groundwork Solutions">
+  <!-- Tab icon: the root-trace mark reversed out of a signal-blue tile.
+       A tile rather than a bare monoline, because a thin line vanishes at
+       16px in a browser tab. The mark is scaled and centred inside the
+       tile, with a slightly heavier stroke to hold up when scaled down. -->
+  <rect width="32" height="32" rx="7" fill="#1B44E0"/>
+  <g transform="translate(3.54 2.55) scale(0.818)">
+    <g fill="none" stroke="#FFFFFF" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 3v9"/>
+      <path d="M16 12 8.5 19.5v4"/>
+      <path d="M16 12v6"/>
+      <path d="M16 18 22 24v2.5"/>
+      <path d="M16 18v8.5"/>
+      <path d="M12.2 15.8H9"/>
+    </g>
+    <g fill="#FFFFFF">
+      <circle cx="8.5" cy="25.2" r="2"/>
+      <circle cx="16" cy="28.2" r="2"/>
+      <circle cx="22" cy="28.2" r="2"/>
+    </g>
+  </g>
+</svg>
