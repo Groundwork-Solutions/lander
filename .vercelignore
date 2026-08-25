@@ -1,0 +1,4 @@
+# source-of-truth files that don't need to be served
+README.md
+build.js
+dist/
