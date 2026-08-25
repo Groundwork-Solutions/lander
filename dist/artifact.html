@@ -466,14 +466,6 @@ a{color:inherit;text-decoration:none}
 .foot__links a:hover{color:var(--ink)}
 .foot__copy{color:var(--ink-soft)}
 
-/* ── placeholder badge — loud on purpose ──────────────────────────────── */
-.ph{
-  display:inline-block;font-family:"DM Mono",monospace;font-size:.6875rem;
-  letter-spacing:.12em;text-transform:uppercase;
-  padding:.3rem .6rem;margin-bottom:1rem;border-radius:var(--r-pill);
-  border:1px dashed currentColor;opacity:.7;
-}
-
 /* ── scroll reveal ────────────────────────────────────────────────────── */
 /* Scoped to .js on purpose. The class is set by a one-line inline script in
    the head, so if script.js never loads — offline, blocked, or a syntax error
@@ -891,35 +883,12 @@ a{color:inherit;text-decoration:none}
     </div>
   </section>
 
-  <!-- ── testimonials: PLACEHOLDER QUOTES — swap for real, attributed ones -->
-  <section class="band">
-    <div class="wrap">
-      <header class="sec">
-        <p class="eyebrow reveal">What they say</p>
-        <h2 class="sec__head reveal">Count the staff numbers. That's the brag.</h2>
-        <p class="sec__sub reveal">
-          Twelve people. Forty. Eighty-five. Every one of them carrying a workload that ought to need a
-          bigger room. Nobody was replaced — the repeating half of the job just stopped needing a human,
-          and the pile stopped growing. Our clients aren't short-staffed. They're done being the bottleneck.
-        </p>
-        <p class="ph reveal">Placeholder quotes — not real customers</p>
-      </header>
-      <div class="grid grid--3">
-        <figure class="quote reveal">
-          <blockquote>“We were drowning in the same forty emails a day. The support agent went live on a Tuesday and by Friday my ops lead had her afternoons back. She's now doing the work I actually hired her for.”</blockquote>
-          <figcaption><b>Dana Whitfield</b><span>COO, Harbor Point Supply · 40 staff</span></figcaption>
-        </figure>
-        <figure class="quote reveal">
-          <blockquote>“I'd been quoted three hundred thousand and eighteen months by an enterprise vendor. Groundwork scoped it in a week and had the receptionist answering calls in five. We haven't missed a booking since.”</blockquote>
-          <figcaption><b>Marcus Bell</b><span>Owner, Bell &amp; Sons HVAC · 12 staff</span></figcaption>
-        </figure>
-        <figure class="quote reveal">
-          <blockquote>“The lead agent found us eleven qualified accounts in month one, two of which closed. What sold me was that it stopped guessing — every opener referenced something real about the company.”</blockquote>
-          <figcaption><b>Priya Raghunathan</b><span>VP Revenue, Latchkey Logistics · 85 staff</span></figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
+  <!-- Testimonials removed 2026-08-25. The three quotes that lived here
+       ("Dana Whitfield / Harbor Point Supply", "Marcus Bell / Bell & Sons
+       HVAC", "Priya Raghunathan / Latchkey Logistics") were invented, and a
+       fabricated testimonial on a live site is a lie told to a prospect.
+       Restore this section the moment there is one real, permissioned quote —
+       the markup is in git at v1-pre-redesign. -->
 
   <!-- ── objections ───────────────────────────────────────────────────── -->
   <section class="band band--tint" id="faq">

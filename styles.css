@@ -461,14 +461,6 @@ a{color:inherit;text-decoration:none}
 .foot__links a:hover{color:var(--ink)}
 .foot__copy{color:var(--ink-soft)}
 
-/* ── placeholder badge — loud on purpose ──────────────────────────────── */
-.ph{
-  display:inline-block;font-family:"DM Mono",monospace;font-size:.6875rem;
-  letter-spacing:.12em;text-transform:uppercase;
-  padding:.3rem .6rem;margin-bottom:1rem;border-radius:var(--r-pill);
-  border:1px dashed currentColor;opacity:.7;
-}
-
 /* ── scroll reveal ────────────────────────────────────────────────────── */
 /* Scoped to .js on purpose. The class is set by a one-line inline script in
    the head, so if script.js never loads — offline, blocked, or a syntax error
