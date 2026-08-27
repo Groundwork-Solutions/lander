@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Groundwork Solutions — AI agents for small and mid-sized companies</title>
-<meta name="description" content="Groundwork Solutions builds custom AI agents for small and mid-sized companies — ticket support, booking, reception, and lead sourcing that run without you. One monthly retainer, first agent live in six weeks.">
+<meta name="description" content="Groundwork Solutions builds custom AI agents for small and mid-sized companies — ticket support, booking, reception, and lead sourcing that run without you. A fixed build fee, then a monthly retainer. First agent live in six weeks.">
 <meta property="og:title" content="Groundwork Solutions">
 <meta property="og:description" content="Custom AI agents for small and mid-sized companies. Built, deployed, and tuned in weeks — not quarters.">
 <meta property="og:type" content="website">
@@ -397,6 +397,36 @@ a{color:inherit;text-decoration:none}
   font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);
 }
 
+/* The sequence is a loop, not a line: once the first agent is live the next
+   one starts again at 01 and layers on top of what is already running. The
+   return path is drawn as a dashed bracket under the four stages, with the
+   arrowhead pointing back up into stage 01. Below the four-up breakpoint the
+   stages stack, so the bracket is dropped and the label reads as a sentence. */
+.loopback{position:relative;margin-top:1.6rem;height:3rem}
+.loopback::before{
+  content:"";position:absolute;left:6%;right:6%;top:0;bottom:1.15rem;
+  border:1.5px dashed var(--signal);border-top:0;border-radius:0 0 var(--r-md) var(--r-md);
+}
+.loopback__head{
+  position:absolute;left:6%;top:-5px;width:0;height:0;transform:translateX(-6px);
+  border-left:6px solid transparent;border-right:6px solid transparent;
+  border-bottom:9px solid var(--signal);
+}
+.loopback__label{
+  position:absolute;left:50%;bottom:1.15rem;transform:translate(-50%,50%);
+  background:var(--paper);padding:0 .9rem;white-space:nowrap;
+  font-size:.9375rem;color:var(--ink-soft);
+}
+.loopback__label b{color:var(--signal);font-weight:700}
+@media (max-width:1079px){
+  .loopback{height:auto;margin-top:1.25rem}
+  .loopback::before,.loopback__head{display:none}
+  .loopback__label{
+    position:static;transform:none;white-space:normal;padding:1.25rem 0 0;
+    border-top:1px solid var(--rule);background:none;
+  }
+}
+
 /* ── pricing strip ────────────────────────────────────────────────────── */
 .price{display:grid;gap:1.25rem}
 @media (min-width:760px){.price{grid-template-columns:repeat(3,1fr)}}
@@ -525,6 +555,7 @@ a{color:inherit;text-decoration:none}
     <a href="#how">How it works</a>
     <a href="#pricing">Pricing</a>
     <a href="#faq">Questions</a>
+    <a href="https://demo.trygroundworksolutions.com" target="_blank" rel="noopener">Live demo ↗</a>
   </nav>
   <div class="nav__end">
     <button class="toggle" id="theme-toggle" type="button" aria-pressed="false">
@@ -549,11 +580,11 @@ a{color:inherit;text-decoration:none}
       </p>
       <div class="hero__actions reveal">
         <a class="btn" href="https://calendar.app.google/C2f3wrVxgt5ZZfZe9" target="_blank" rel="noopener">Book a fit call</a>
-        <a class="btn btn--line" href="#what">See what we build</a>
+        <a class="btn btn--line" href="https://demo.trygroundworksolutions.com" target="_blank" rel="noopener">Try the live demo ↗</a>
       </div>
       <p class="hero__trust reveal">
-        <span><i aria-hidden="true">▚</i> One monthly retainer</span>
-        <span><i aria-hidden="true">▚</i> No build fees</span>
+        <span><i aria-hidden="true">▚</i> Priced before you commit</span>
+        <span><i aria-hidden="true">▚</i> First agent live in six weeks</span>
         <span><i aria-hidden="true">▚</i> Straight answers</span>
       </p>
     </div>
@@ -781,8 +812,8 @@ a{color:inherit;text-decoration:none}
         <p class="eyebrow reveal">How it works</p>
         <h2 class="sec__head reveal">First agent live in six weeks</h2>
         <p class="sec__sub reveal">
-          A fixed sequence, all of it inside the same monthly retainer. You'll know exactly what's
-          shipping before each stage starts.
+          A fixed sequence, and a loop rather than a line — once the first agent is live, the next
+          one starts again at 01. You'll know exactly what's shipping before each stage begins.
         </p>
       </header>
       <ol class="steps reveal">
@@ -823,6 +854,12 @@ a{color:inherit;text-decoration:none}
           <span class="step__when">Ongoing</span>
         </li>
       </ol>
+      <div class="loopback reveal">
+        <span class="loopback__head" aria-hidden="true"></span>
+        <p class="loopback__label">
+          Back to <b>01</b> for the next agent &mdash; marketing, inventory, a second support agent
+        </p>
+      </div>
     </div>
   </section>
 
@@ -831,27 +868,27 @@ a{color:inherit;text-decoration:none}
     <div class="wrap">
       <header class="sec">
         <p class="eyebrow reveal">Pricing</p>
-        <h2 class="sec__head reveal">One monthly retainer. That's the whole model.</h2>
+        <h2 class="sec__head reveal">A fixed build, then a monthly retainer.</h2>
         <p class="sec__sub reveal">
-          No build fee, no setup cost, no per-seat licensing, no usage billing. You get a
-          forward-deployed engineer who audits, builds, and keeps it running.
+          Both quoted before you commit, and scoped to the process — not to seats, not to usage.
+          No hidden line items and no annual lock-in.
         </p>
       </header>
       <div class="price reveal">
         <div class="price__cell">
-          <p class="price__k">How you pay</p>
-          <p class="price__v">One monthly retainer</p>
-          <p class="price__n">No build fee, no setup cost, no per-seat pricing. One number every month.</p>
+          <p class="price__k">One-time build</p>
+          <p class="price__v">$2,000 &ndash; $3,000</p>
+          <p class="price__n">Scoped to the use case: design, build, and integration into the systems you already run.</p>
         </div>
         <div class="price__cell">
-          <p class="price__k">What it covers</p>
-          <p class="price__v">Your forward-deployed engineer</p>
-          <p class="price__n">Audit, blueprint, build, and ongoing tuning — the same engineer throughout.</p>
+          <p class="price__k">Monthly retainer</p>
+          <p class="price__v">$1,500 &ndash; $2,500 / mo</p>
+          <p class="price__n">Running the agents, monitoring, continuous refinement, and your assigned AI engineer.</p>
         </div>
         <div class="price__cell">
-          <p class="price__k">How you start</p>
-          <p class="price__v">One call, a straight answer</p>
-          <p class="price__n">Twenty minutes, no charge. If an agent can't earn its keep in your business, we'll tell you on that call.</p>
+          <p class="price__k">Every agent after the first</p>
+          <p class="price__v">A fraction of the first</p>
+          <p class="price__n">The connections, data access, and guardrails are already built — the next agent layers on top of them.</p>
         </div>
       </div>
     </div>
@@ -913,7 +950,7 @@ a{color:inherit;text-decoration:none}
       <dl class="faq reveal">
         <div class="faq__item">
           <dt>What does this actually cost?</dt>
-          <dd>One monthly retainer, quoted before you commit — it covers the engineer, the audit, the build, and keeping it running. There's no build fee, no setup cost, no seat licences, and no usage billing. The number we quote you is the number you pay.</dd>
+          <dd>A one-time build fee of $2,000–$3,000 depending on the process, then a monthly retainer of $1,500–$2,500 that covers running the agents, monitoring, refinement, and your assigned AI engineer. No seat licences and no usage billing. Both numbers are quoted before you commit — and every agent after the first costs a fraction of the first build, because the integration work is already done.</dd>
         </div>
         <div class="faq__item">
           <dt>Where does our data go?</dt>
@@ -969,6 +1006,7 @@ a{color:inherit;text-decoration:none}
       <a href="#how">How it works</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">Questions</a>
+      <a href="https://demo.trygroundworksolutions.com" target="_blank" rel="noopener">Live demo</a>
       <a href="mailto:dothan@trygroundworksolutions.com">Contact</a>
     </nav>
     <span class="foot__copy">© 2026 groundwork solutions</span>
