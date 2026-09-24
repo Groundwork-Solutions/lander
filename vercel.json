@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/demo", "destination": "https://lasthire-demo.vercel.app/demo" },
+    { "source": "/demo/:path*", "destination": "https://lasthire-demo.vercel.app/demo/:path*" }
+  ]
+}
