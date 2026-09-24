@@ -1,494 +1,341 @@
-/* ═══════════════════════════════════════════════════════════════════════
-   Groundwork Solutions — page behaviour
-   1. theme toggle      explicit choice beats the OS, and persists
-   2. scroll reveal     sections fade up as they enter
-   3. marquee sizing    clones units so the -50% loop stays seamless
-   4. agent tabs        the six agents, one panel at a time
-   5. pipeline canvas   the animated background behind the hero
-   ═══════════════════════════════════════════════════════════════════════ */
+(function(){
+  var sleep = function(ms){ return new Promise(function(r){ setTimeout(r, ms); }); };
 
-/* ── 1. theme ─────────────────────────────────────────────────────────── */
-(function () {
-  var root = document.documentElement;
-  var KEY = 'gw-theme';
-  var saved = null;
-  try { saved = localStorage.getItem(KEY); } catch (e) {}
-  if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+  // header hairline on scroll
+  var h = document.querySelector('header');
+  function onScroll(){ h.classList.toggle('scrolled', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
 
-  function current() {
-    var set = root.getAttribute('data-theme');
-    if (set) return set;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
+  // only animate what's on screen
+  // Each piece runs in its own guard so one failure can't take the rest down.
+  function safe(fn){ try { var p = fn(); if (p && p.catch) p.catch(function(e){ if (window.console) console.warn(e); }); } catch(e){ if (window.console) console.warn(e); } }
 
-  var btn = document.getElementById('theme-toggle');
-  if (btn) {
-    btn.setAttribute('aria-pressed', String(current() === 'dark'));
-    btn.addEventListener('click', function () {
-      var next = current() === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      btn.setAttribute('aria-pressed', String(next === 'dark'));
-      try { localStorage.setItem(KEY, next); } catch (e) {}
-      window.dispatchEvent(new CustomEvent('gw:theme'));
-    });
-  }
-})();
-
-/* ── 2. scroll reveal ─────────────────────────────────────────────────── */
-(function () {
-  var items = document.querySelectorAll('.reveal');
-  if (!items.length) return;
-  if (!('IntersectionObserver' in window) ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    items.forEach(function (el) { el.classList.add('is-in'); });
-    return;
-  }
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-in');
-      io.unobserve(entry.target);
-    });
-  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-  items.forEach(function (el) { io.observe(el); });
-})();
-
-/* ── 3. marquee ───────────────────────────────────────────────────────── */
-(function () {
-  var tracks = document.querySelectorAll('.banner__track');
-  if (!tracks.length) return;
-
-  function fill() {
-    tracks.forEach(function (track) {
-      var unit = track.firstElementChild;
-      if (!unit) return;
-      var unitW = unit.getBoundingClientRect().width;
-      if (!unitW) return;
-      var perHalf = Math.ceil(window.innerWidth / unitW) + 1;
-      var total = perHalf * 2;
-      while (track.children.length < total) {
-        track.appendChild(unit.cloneNode(true));
-      }
-    });
-  }
-
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fill);
-  else fill();
-  window.addEventListener('resize', fill, { passive: true });
-})();
-
-/* ── 4. agent tabs ────────────────────────────────────────────────────── */
-(function () {
-  var tablist = document.querySelector('[role="tablist"]');
-  if (!tablist) return;
-  var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[role="tab"]'));
-
-  function select(tab) {
-    tabs.forEach(function (t) {
-      var on = t === tab;
-      t.setAttribute('aria-selected', String(on));
-      t.tabIndex = on ? 0 : -1;
-      var panel = document.getElementById(t.getAttribute('aria-controls'));
-      if (panel) {
-        if (on) panel.setAttribute('data-active', '');
-        else panel.removeAttribute('data-active');
-      }
-    });
-  }
-
-  tabs.forEach(function (tab, i) {
-    tab.addEventListener('click', function () { select(tab); });
-    tab.addEventListener('keydown', function (e) {
-      var next = null;
-      if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
-      else if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
-      else if (e.key === 'Home') next = tabs[0];
-      else if (e.key === 'End') next = tabs[tabs.length - 1];
-      if (!next) return;
-      e.preventDefault();
-      select(next);
-      next.focus();
-    });
-  });
-})();
-
-/* ── 6. ambient field ─────────────────────────────────────────────────────
-   A fixed canvas behind the whole page. A faint drafting grid, and on top
-   of it traces that route themselves the way a board is routed — 90° and
-   45° segments, a via at each end — then hold and fade out. New ones keep
-   spawning, so the page always has a slow pulse behind it without anything
-   ever demanding attention.
-
-   Kept cheap on purpose: the grid is rendered once to an offscreen canvas
-   and blitted, only a handful of traces are ever alive, the whole thing
-   stops when the tab is hidden, and it never starts at all for a visitor
-   who prefers reduced motion.                                             */
-(function () {
-  var canvas = document.getElementById('field');
-  if (!canvas || !canvas.getContext) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  var ctx = canvas.getContext('2d');
-  var dpr = Math.min(window.devicePixelRatio || 1, 2);
-  var W = 0, H = 0, raf = null, running = false;
-  var GRID = 44;                 // drafting grid pitch, px
-  var MAX = 10;                  // traces alive at once
-  var traces = [];
-  var grid = document.createElement('canvas');
-  var gctx = grid.getContext('2d');
-
-  function ink() {
-    var v = getComputedStyle(document.documentElement).getPropertyValue('--signal');
-    return (v || '#1b44e0').trim();
-  }
-  var COLOR = ink();
-
-  function rebuildGrid() {
-    grid.width = Math.round(W * dpr);
-    grid.height = Math.round(H * dpr);
-    gctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    gctx.clearRect(0, 0, W, H);
-    gctx.fillStyle = COLOR;
-    gctx.globalAlpha = 0.3;
-    for (var x = GRID; x < W; x += GRID) {
-      for (var y = GRID; y < H; y += GRID) {
-        gctx.beginPath();
-        gctx.arc(x, y, 0.9, 0, Math.PI * 2);
-        gctx.fill();
-      }
+  // Only animate what's on screen, and pause while the tab is hidden.
+  function watch(el){
+    var s = {v:true};
+    if (el && 'IntersectionObserver' in window){
+      s.v = false;
+      new IntersectionObserver(function(es){ s.v = es[es.length - 1].isIntersecting; }, {threshold:0, rootMargin:'0px 0px -10% 0px'}).observe(el);
     }
-    gctx.globalAlpha = 1;
+    return s;
   }
+  async function until(s){ while(!s.v || document.hidden) await sleep(250); }
 
-  function resize() {
-    W = window.innerWidth;
-    H = window.innerHeight;
-    canvas.width = Math.round(W * dpr);
-    canvas.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    rebuildGrid();
-  }
+  // ── conversation scripts: [speaker, text]. them = person, ai = agent, sys = status line
+  var SCRIPTS = {
+    rec: [
+      ['sys','Incoming call · Sun 7:40pm'],
+      ['them','Hi, water is coming through my kitchen ceiling. Can someone come out?'],
+      ['ai','I can help. Is it still running, or have you shut off the main?'],
+      ['them','Shut it off. It stopped.'],
+      ['ai','Good. I have a tech at 8am tomorrow, or an emergency visit tonight for $189. Which works?'],
+      ['them','8am is fine.'],
+      ['cal',{day:'Mon, Sep 28',rows:[['7am','Water heater swap','Dave'],['8am','Ceiling leak · 12 Birch Ln','Mike',1],['9am']]}],
+      ['ai','You’re booked for 8am. Mike will text when he’s on the way.'],
+      ['ok','✓ Added to calendar · summary texted to owner']
+    ],
+    book: [
+      ['them','Any chance Thursday afternoon for the furnace tune-up?'],
+      ['ai','Thursday works. I have 2:00 or 4:30. Which is better?'],
+      ['them','2 please'],
+      ['cal',{day:'Thu, Oct 1',rows:[['1pm','Boiler service','Ray'],['2pm','Furnace tune-up · 14 Oak St','Ray',1],['3pm']]}],
+      ['ai','You’re booked Thu 2:00pm. I’ll text a reminder Wednesday evening.'],
+      ['ok','✓ Added to calendar · reminder queued']
+    ],
+    tix: [
+      ['them','Where’s my order? #48812'],
+      ['sys','Read order history + shipping policy'],
+      ['ai','Hi Sam, it shipped Monday with UPS and arrives tomorrow by 7pm. Tracking is below.'],
+      ['them','Perfect, thanks!'],
+      ['ok','✓ Ticket closed in 90 seconds']
+    ],
+    lead: [
+      ['them','Find more companies like our three best accounts.'],
+      ['sys','Searching 3 counties · checking contacts'],
+      ['leads',{title:'12 matches',meta:'top 3 shown',rows:[
+        ['Ridgeline Property Mgmt','40 rentals · Dana Kim, Ops','Hiring maintenance lead','#2d6a73'],
+        ['Summit HOA Services','12 communities · Raj Patel, GM','Won new contract','#7a4bb0'],
+        ['Blue Oak Apartments','220 units · Lisa Moreno, Owner','Opened 2nd site','#2f6fd6']]}],
+      ['ai','Top pick is Ridgeline. They just posted a maintenance job, so the opener mentions it.'],
+      ['mail',{to:'dana@ridgelinepm.com',subject:'Your maintenance lead opening',body:'Hi Dana, saw Ridgeline is <mark>hiring a maintenance lead</mark> for its 40 rentals. While you look, we can cover after-hours calls for your tenants…'}],
+      ['ai','Queue all 12 for tomorrow morning?'],
+      ['them','Yes, queue them.'],
+      ['ok','✓ 12 openers scheduled for 9am']
+    ],
+    inv: [
+      ['sys','New email from Ferguson · 1 PDF attached'],
+      ['doc',{name:'INV-88412.pdf',po:'PO #2207',more:'10 more lines match',rows:[
+        ['L7','1/2" PEX, 100 ft','6','6'],
+        ['L8','SharkBite couplings','30','30'],
+        ['L9','3/4" copper elbows','40','24'],
+        ['L10','Pipe insulation','12','12']]}],
+      ['ai','13 of 14 lines match. Line 9 bills 40 elbows, but you ordered 24. That\u2019s $38.40 extra.'],
+      ['them','Good catch. Post the rest, I’ll call them about line 9.'],
+      ['ai','Posted to QuickBooks. Line 9 is held with a note.'],
+      ['ok','✓ Posted · 1 exception']
+    ],
+    kb: [
+      ['them','What’s the warranty on the RX-40?'],
+      ['sys','Searched manuals + price lists'],
+      ['ai','3 years parts, 1 year labour. Source: RX-40 manual, page 14.'],
+      ['them','Does that cover the pump?'],
+      ['ai','Yes. The pump is listed under parts, same page, section 2.']
+    ]
+  };
 
-  /* a route: start on the grid, then 2–4 legs, each either straight or a
-     45° diagonal, snapped so it always lands back on a grid intersection */
-  function makeTrace() {
-    var cols = Math.max(2, Math.floor(W / GRID));
-    var rows = Math.max(2, Math.floor(H / GRID));
-    var x = (1 + Math.floor(Math.random() * (cols - 1))) * GRID;
-    var y = (1 + Math.floor(Math.random() * (rows - 1))) * GRID;
-    var pts = [{ x: x, y: y }];
-    var legs = 2 + Math.floor(Math.random() * 3);
-    var dirs = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]];
-
-    for (var i = 0; i < legs; i++) {
-      var d = dirs[Math.floor(Math.random() * dirs.length)];
-      var len = (1 + Math.floor(Math.random() * 3)) * GRID;
-      var nx = Math.min(Math.max(x + d[0] * len, GRID), W - GRID);
-      var ny = Math.min(Math.max(y + d[1] * len, GRID), H - GRID);
-      if (nx === x && ny === y) continue;
-      pts.push({ x: nx, y: ny });
-      x = nx; y = ny;
+  function bubble(kind, text, label){
+    var d = document.createElement('div');
+    if (kind === 'cal'){
+      d.className = 'calcard';
+      var html = '<div class="cal-h"><svg><use href="#i-cal"/></svg>Google Calendar<span>' + text.day + '</span></div>';
+      text.rows.forEach(function(r){
+        html += '<div class="cal-row"><time>' + r[0] + '</time><div>' +
+          (r[1] ? '<div class="ev ' + (r[3] ? 'new' : 'busy') + '">' + r[1] + (r[2] ? '<small>' + r[2] + '</small>' : '') + '</div>' : '') +
+          '</div></div>';
+      });
+      d.innerHTML = html; return d;
     }
-    if (pts.length < 2) return null;
-
-    var total = 0;
-    for (var j = 1; j < pts.length; j++) {
-      total += Math.hypot(pts[j].x - pts[j - 1].x, pts[j].y - pts[j - 1].y);
+    if (kind === 'leads'){
+      d.className = 'xcard';
+      var h = '<div class="x-h"><svg><use href="#i-target"/></svg>' + text.title + '<span>' + text.meta + '</span></div>';
+      text.rows.forEach(function(r, i){
+        h += '<div class="lrow" style="--k:' + i + '"><span class="logo-sq" style="--lc:' + r[3] + '">' + r[0].split(' ').map(function(w){return w[0];}).slice(0,2).join('') + '</span>' +
+          '<div><b>' + r[0] + '</b><small>' + r[1] + '</small><span class="sig">' + r[2] + '</span></div>' +
+          '<span class="vstat" style="--k:' + i + '"><i class="chk">checking…</i><i class="ok">✓ verified</i></span></div>';
+      });
+      d.innerHTML = h; return d;
     }
-    return {
-      pts: pts,
-      total: total,
-      draw: 0,                                  // 0→1, how much is routed
-      speed: 0.006 + Math.random() * 0.007,
-      hold: 60 + Math.random() * 90,            // frames to sit complete
-      fade: 1,
-      phase: 'draw'
-    };
+    if (kind === 'mail'){
+      d.className = 'xcard mail';
+      d.innerHTML = '<div class="x-h"><svg><use href="#i-inbox"/></svg>Draft opener<span>1 of 12</span></div>' +
+        '<div class="to"><span>To</span><b>' + text.to + '</b><span>Subject</span><b>' + text.subject + '</b></div><p>' + text.body + '</p>';
+      return d;
+    }
+    if (kind === 'doc'){
+      d.className = 'xcard doc';
+      var g = '<span class="scan"></span><div class="x-h"><svg><use href="#i-doc"/></svg>' + text.name + '<span>vs ' + text.po + '</span></div>' +
+        '<div class="drow head"><span>#</span><span>Item</span><span class="n">Billed</span><span class="n">PO</span><span></span></div>';
+      text.rows.forEach(function(r, i){
+        var bad = r[3] !== r[2];
+        g += '<div class="drow' + (bad ? ' flag' : '') + '" style="--k:' + i + '"><code>' + r[0] + '</code><span>' + r[1] + '</span>' +
+          '<span class="n billed">' + r[2] + '</span><span class="n">' + r[3] + '</span>' +
+          '<span class="st ' + (bad ? 'bad">!' : 'good">✓') + '</span></div>';
+      });
+      d.innerHTML = g + '<div class="more">✓ ' + text.more + '</div>';
+      return d;
+    }
+    if (kind === 'sys' || kind === 'ok' || kind === 'warn'){
+      d.className = 'sys' + (kind === 'sys' ? '' : ' ' + kind);
+      d.textContent = text; return d;
+    }
+    d.className = 'msg ' + (kind === 'photo' ? 'them' : kind);
+    if (label){ var b = document.createElement('span'); b.className = 'by'; b.textContent = label; d.appendChild(b); }
+    if (kind === 'photo'){ var t = document.createElement('span'); t.className = 'thumb'; d.appendChild(t); }
+    d.appendChild(document.createTextNode(text));
+    return d;
   }
+  function typing(){
+    var d = document.createElement('div');
+    d.className = 'msg ai typing';
+    d.innerHTML = '<i></i><i></i><i></i>';
+    return d;
+  }
+  function trim(box){ while (box.children.length > 14) box.removeChild(box.firstChild); }
 
-  function strokeTrace(t) {
-    var target = t.draw * t.total;
-    var run = 0;
-    var head = t.pts[0];                       // where the route has got to
-    ctx.beginPath();
-    ctx.moveTo(t.pts[0].x, t.pts[0].y);
-    for (var i = 1; i < t.pts.length; i++) {
-      var a = t.pts[i - 1], b = t.pts[i];
-      var seg = Math.hypot(b.x - a.x, b.y - a.y);
-      if (run + seg <= target) {
-        ctx.lineTo(b.x, b.y);
-        run += seg;
-        head = b;
+  async function play(box, steps, vis, labels){
+    for (var i = 0; i < steps.length; i++){
+      var k = steps[i][0], t = steps[i][1];
+      await until(vis);
+      if (i === 0 && k !== 'ai'){
+        // open each loop immediately so the chat never sits empty
+      } else if (k === 'ai'){
+        await sleep(450);
+        var ty = typing(); box.appendChild(ty);
+        await sleep(Math.min(1900, 700 + t.length * 13));
+        if (ty.parentNode) ty.parentNode.removeChild(ty);
+      } else if (k === 'them' || k === 'photo'){
+        await sleep(1000 + Math.min(900, t.length * 12));
       } else {
-        var k = Math.max(0, (target - run) / seg);
-        head = { x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k };
-        ctx.lineTo(head.x, head.y);
-        break;
+        await sleep(700);
       }
+      box.appendChild(bubble(k, t, labels && labels[k === 'photo' ? 'them' : k]));
+      trim(box);
+      var hold = {cal:1400, leads:2600, mail:2200, doc:3000}[k];
+      if (hold) await sleep(hold);
     }
-    ctx.strokeStyle = COLOR;
-    ctx.lineWidth = 1.5;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.globalAlpha = 0.6 * t.fade;
-    ctx.stroke();
+  }
+  function renderStatic(box, steps, labels){
+    box.innerHTML = '';
+    steps.forEach(function(s){ box.appendChild(bubble(s[0], s[1], labels && labels[s[0] === 'photo' ? 'them' : s[0]])); });
+  }
 
-    ctx.fillStyle = COLOR;
+  // agent cards: each loops its own conversation
+  Array.prototype.forEach.call(document.querySelectorAll('.thread[data-s]'), function(box, idx){ safe(function(){
+    var steps = SCRIPTS[box.getAttribute('data-s')];
+    if (!steps) return;
+    renderStatic(box, steps);
+    var vis = watch(box);
+    return (async function loop(){
+      await until(vis);
+      await sleep(idx * 700);
+      for(;;){
+        box.innerHTML = '';
+        await play(box, steps, vis);
+        await sleep(4200);
+        box.classList.add('fading'); await sleep(450);
+        box.classList.remove('fading');
+      }
+    })();
+  }); });
 
-    // via at the origin, and at the far end once the route lands
-    ctx.globalAlpha = 0.7 * t.fade;
-    ctx.beginPath();
-    ctx.arc(t.pts[0].x, t.pts[0].y, 2.2, 0, Math.PI * 2);
-    ctx.fill();
-    if (t.draw >= 1) {
-      var last = t.pts[t.pts.length - 1];
-      ctx.beginPath();
-      ctx.arc(last.x, last.y, 2.2, 0, Math.PI * 2);
-      ctx.fill();
+  // ── approval card: full back-and-forth, then waits for the visitor to decide
+  var KAREN = [
+    ['them','The 3/4" brass fitting from order #51207 arrived cracked. I can’t finish the job with it.'],
+    ['ai','Sorry about that, Karen. Could you send a photo of the crack?'],
+    ['photo','Here you go.'],
+    ['sys','Photo checked · matches damage-in-transit policy'],
+    ['ai','Thanks, that’s shipping damage. Would you like a replacement sent today, or a full refund of $84.00?'],
+    ['them','Refund please. I already bought one locally.'],
+    ['warn','Refund over $50 → held for your approval']
+  ];
+  var LABELS = {them:'Karen M.', ai:'Agent'};
+  var apv = {
+    card: document.getElementById('approve'),
+    box: document.getElementById('apv-thread'),
+    panel: document.getElementById('apv-panel'),
+    pill: document.getElementById('apv-pill'),
+    draft: document.getElementById('apv-draft'),
+    edit: document.getElementById('apv-edit')
+  };
+  var decide = null;
+  function setPill(cls, txt){ apv.pill.className = 'pill ' + cls; apv.pill.textContent = txt; }
+  function draftText(){
+    var clone = apv.draft.cloneNode(true);
+    var meta = clone.querySelector('.meta'); if (meta) meta.remove();
+    return clone.textContent.trim();
+  }
+  document.getElementById('apv-yes').addEventListener('click', function(){ decide && decide('yes'); });
+  document.getElementById('apv-back').addEventListener('click', function(){ decide && decide('back'); });
+  apv.edit.addEventListener('click', function(){
+    apv.draft.contentEditable = 'true'; apv.draft.focus(); apv.edit.textContent = 'Editing…';
+  });
+
+  // The buttons only appear once the conversation reaches the approval step,
+  // so a tap can never land on a button that isn't listening yet.
+  renderStatic(apv.box, KAREN, LABELS);
+  apv.panel.hidden = true;
+  setPill('p-hand', 'Handling');
+
+  async function resolve(choice){
+    apv.panel.hidden = true;
+    apv.draft.contentEditable = 'false'; apv.edit.textContent = 'Edit';
+    if (choice === 'yes'){
+      apv.box.appendChild(bubble('ai', draftText(), LABELS.ai));
+      await sleep(600);
+      apv.box.appendChild(bubble('ok', '✓ Approved by you · sent · reversible for 24h'));
+      setPill('p-done', 'Sent');
+      await sleep(1400);
+      apv.box.appendChild(bubble('them', 'That was fast. Thank you!', LABELS.them));
     } else {
-      // a brighter head while it is still routing — this is the bit that
-      // makes the whole field read as alive rather than as wallpaper
-      ctx.globalAlpha = 0.5 * t.fade;
-      ctx.beginPath();
-      ctx.arc(head.x, head.y, 5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalAlpha = 0.95 * t.fade;
-      ctx.beginPath();
-      ctx.arc(head.x, head.y, 2, 0, Math.PI * 2);
-      ctx.fill();
+      apv.box.appendChild(bubble('sys', 'Sent back to the agent with your note'));
+      setPill('p-hand', 'Returned');
     }
-    ctx.globalAlpha = 1;
+    trim(apv.box);
   }
 
-  function step() {
-    if (!running) return;
-    ctx.clearRect(0, 0, W, H);
-    ctx.drawImage(grid, 0, 0, W, H);
-
-    while (traces.length < MAX) {
-      var t = makeTrace();
-      if (!t) break;
-      traces.push(t);
-    }
-
-    for (var i = traces.length - 1; i >= 0; i--) {
-      var tr = traces[i];
-      if (tr.phase === 'draw') {
-        tr.draw += tr.speed;
-        if (tr.draw >= 1) { tr.draw = 1; tr.phase = 'hold'; }
-      } else if (tr.phase === 'hold') {
-        if (--tr.hold <= 0) tr.phase = 'fade';
-      } else {
-        tr.fade -= 0.012;
-        if (tr.fade <= 0) { traces.splice(i, 1); continue; }
+  safe(function(){
+    var avis = watch(apv.card);
+    var original = apv.draft.innerHTML;
+    return (async function loop(){
+      for(;;){
+        await until(avis);
+        apv.box.innerHTML = ''; apv.panel.hidden = true; apv.draft.innerHTML = original;
+        setPill('p-hand', 'Handling');
+        await play(apv.box, KAREN, avis, LABELS);
+        await sleep(500);
+        apv.panel.hidden = false; setPill('p-you', 'Needs you');
+        var choice = await new Promise(function(r){ decide = function(c){ decide = null; r(c); }; });
+        await resolve(choice);
+        await sleep(6500);
+        apv.box.classList.add('fading'); await sleep(450); apv.box.classList.remove('fading');
       }
-      strokeTrace(tr);
-    }
-
-    raf = requestAnimationFrame(step);
-  }
-
-  function start() { if (!running) { running = true; raf = requestAnimationFrame(step); } }
-
-  resize();
-  start();
-
-  window.addEventListener('resize', function () { resize(); }, { passive: true });
-  /* No visibilitychange handler on purpose: requestAnimationFrame already
-     stops firing on a hidden tab, so a manual pause/resume adds nothing but
-     a way to get permanently stuck stopped if the resume event never lands. */
-  window.addEventListener('gw:theme', function () { COLOR = ink(); rebuildGrid(); });
-  if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', function () { COLOR = ink(); rebuildGrid(); });
-  }
-})();
-
-/* ── 5. the pipeline ──────────────────────────────────────────────────────
-   A literal picture of the product: work arrives on the left (a call, an
-   email, a form), passes through the agent in the middle, and leaves as an
-   outcome on the right (booked, replied, routed). Packets flow along the
-   curves continuously.
-
-   Deliberately quiet — it sits at low alpha behind the headline and is
-   masked top and bottom by CSS. It is decorative, so the canvas is
-   aria-hidden and it degrades to a single static frame when the visitor
-   prefers reduced motion.                                                 */
-(function () {
-  var canvas = document.getElementById('pipeline');
-  if (!canvas || !canvas.getContext) return;
-
-  var ctx = canvas.getContext('2d');
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var dpr = Math.min(window.devicePixelRatio || 1, 2);
-  var W = 0, H = 0, raf = null, running = false;
-
-  var INPUTS  = ['call', 'email', 'form'];
-  var OUTPUTS = ['booked', 'replied', 'routed'];
-
-  // packets in flight: t runs 0→1 along a lane, then respawns
-  var packets = [];
-  for (var i = 0; i < 14; i++) {
-    packets.push({
-      lane: i % 3,
-      out: (i * 7) % 3,
-      t: Math.random(),
-      speed: 0.0016 + Math.random() * 0.0022,
-      leg: Math.random() < 0.5 ? 0 : 1   // 0 = input→agent, 1 = agent→output
-    });
-  }
-
-  function palette() {
-    var cs = getComputedStyle(document.documentElement);
-    return {
-      line: (cs.getPropertyValue('--signal') || '#1b44e0').trim(),
-      ink: (cs.getPropertyValue('--ink-soft') || '#4d5a72').trim()
-    };
-  }
-  var pal = palette();
-  window.addEventListener('gw:theme', function () { pal = palette(); });
-  if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', function () { pal = palette(); });
-  }
-
-  function resize() {
-    var r = canvas.getBoundingClientRect();
-    W = r.width; H = r.height;
-    canvas.width = Math.round(W * dpr);
-    canvas.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  // geometry, recomputed from current size each frame-ish
-  function geom() {
-    var cx = W * 0.72;              // agent sits right of centre, clear of the text
-    var cy = H * 0.52;
-    var leftX = W * 0.42;
-    var rightX = W * 0.95;
-    var spread = Math.min(H * 0.30, 150);
-    return {
-      cx: cx, cy: cy,
-      inputs: INPUTS.map(function (_, i) {
-        return { x: leftX, y: cy + (i - 1) * spread };
-      }),
-      outputs: OUTPUTS.map(function (_, i) {
-        return { x: rightX, y: cy + (i - 1) * spread };
-      })
-    };
-  }
-
-  // cubic bezier point between two nodes, bowed horizontally
-  function curve(a, b, t) {
-    var mx = (a.x + b.x) / 2;
-    var p1 = { x: mx, y: a.y }, p2 = { x: mx, y: b.y };
-    var u = 1 - t;
-    return {
-      x: u * u * u * a.x + 3 * u * u * t * p1.x + 3 * u * t * t * p2.x + t * t * t * b.x,
-      y: u * u * u * a.y + 3 * u * u * t * p1.y + 3 * u * t * t * p2.y + t * t * t * b.y
-    };
-  }
-
-  function strokeCurve(a, b, alpha) {
-    var mx = (a.x + b.x) / 2;
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.bezierCurveTo(mx, a.y, mx, b.y, b.x, b.y);
-    ctx.globalAlpha = alpha;
-    ctx.strokeStyle = pal.line;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
-
-  function node(x, y, r, filled) {
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    if (filled) {
-      ctx.globalAlpha = 0.20;
-      ctx.fillStyle = pal.line;
-      ctx.fill();
-    }
-    ctx.globalAlpha = 0.45;
-    ctx.strokeStyle = pal.line;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    if (W < 640) return;                 // too tight to read on phones — skip it
-    var g = geom();
-
-    // lanes
-    g.inputs.forEach(function (p) { strokeCurve(p, { x: g.cx, y: g.cy }, 0.16); });
-    g.outputs.forEach(function (p) { strokeCurve({ x: g.cx, y: g.cy }, p, 0.16); });
-
-    // nodes
-    g.inputs.forEach(function (p) { node(p.x, p.y, 4, false); });
-    g.outputs.forEach(function (p) { node(p.x, p.y, 4, false); });
-
-    // the agent — a soft ring, slightly breathing
-    var pulse = reduced ? 0 : Math.sin(Date.now() / 1400) * 1.6;
-    node(g.cx, g.cy, 17 + pulse, true);
-    node(g.cx, g.cy, 27 + pulse * 1.4, false);
-
-    // packets
-    packets.forEach(function (pk) {
-      var a, b;
-      if (pk.leg === 0) { a = g.inputs[pk.lane]; b = { x: g.cx, y: g.cy }; }
-      else { a = { x: g.cx, y: g.cy }; b = g.outputs[pk.out]; }
-      var pt = curve(a, b, pk.t);
-      var fade = Math.sin(pk.t * Math.PI);      // dim at both ends of the lane
-      ctx.beginPath();
-      ctx.arc(pt.x, pt.y, 2.4, 0, Math.PI * 2);
-      ctx.globalAlpha = 0.75 * fade;
-      ctx.fillStyle = pal.line;
-      ctx.fill();
-    });
-
-    ctx.globalAlpha = 1;
-  }
-
-  function step() {
-    if (!running) return;
-    packets.forEach(function (pk) {
-      pk.t += pk.speed;
-      if (pk.t >= 1) {
-        pk.t = 0;
-        if (pk.leg === 0) { pk.leg = 1; }
-        else { pk.leg = 0; pk.lane = Math.floor(Math.random() * 3); pk.out = Math.floor(Math.random() * 3); }
-      }
-    });
-    draw();
-    raf = requestAnimationFrame(step);
-  }
-
-  function start() {
-    if (running || reduced) return;
-    running = true;
-    raf = requestAnimationFrame(step);
-  }
-  function stop() {
-    running = false;
-    if (raf) cancelAnimationFrame(raf);
-    raf = null;
-  }
-
-  resize();
-  draw();
-  if (reduced) return;                    // static frame only
-
-  window.addEventListener('resize', function () { resize(); draw(); }, { passive: true });
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) stop(); else start();
+    })();
   });
 
-  // only animate while the hero is actually on screen
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { e.isIntersecting ? start() : stop(); });
-    }, { threshold: 0 }).observe(canvas);
-  } else {
-    start();
+  // ── hero dashboard: new activity keeps arriving
+  var POOL = [
+    ['flame','i-phone','Receptionist','After-hours call, water heater quote booked','p-done','Done','calls'],
+    ['blue','i-cal','Booking','Rescheduled Mrs. Ortiz to Fri 10am','p-done','Done','jobs'],
+    ['jade','i-inbox','Ticket support','Answered 3 “where’s my order” emails','p-done','Done',null],
+    ['violet','i-target','Lead finder','5 new property managers researched','p-done','Done',null],
+    ['flame','i-phone','Receptionist','Caller asked for a $6k repipe quote','p-hand','Handed off','calls'],
+    ['amber','i-doc','Invoices','Ferguson invoice posted, all lines match','p-done','Done',null],
+    ['blue','i-cal','Booking','New drain cleaning booked Sat 9am','p-done','Done','jobs'],
+    ['jade','i-inbox','Ticket support','Refund request over $50 drafted','p-you','Needs you','you']
+  ];
+  var feed = document.getElementById('feed');
+  var K = {calls: document.getElementById('k-calls'), jobs: document.getElementById('k-jobs'), you: document.getElementById('k-you')};
+  function bump(key){
+    var el = K[key]; if (!el) return;
+    el.textContent = String(parseInt(el.textContent, 10) + 1);
+    el.classList.add('bump'); setTimeout(function(){ el.classList.remove('bump'); }, 900);
   }
+  var clock = 19 * 60 + 42;
+  function fmt(m){ var hh = Math.floor(m / 60) % 24, mm = m % 60, ap = hh >= 12 ? 'p' : 'a'; hh = hh % 12 || 12; return hh + ':' + (mm < 10 ? '0' : '') + mm + ap; }
+  if (feed) safe(function(){
+    var fvis = watch(document.getElementById('app'));
+    return (async function(){
+      var i = 0;
+      await sleep(2200);
+      for(;;){
+        await until(fvis);
+        var e = POOL[i++ % POOL.length];
+        clock += 3 + Math.floor(Math.random() * 7);
+        var row = document.createElement('div');
+        row.className = 'row new';
+        var ink = e[0] === 'amber' ? ';color:#171310' : '';
+        row.innerHTML = '<span class="av" style="background:var(--' + e[0] + ')' + ink + '"><svg><use href="#' + e[1] + '"/></svg></span>' +
+          '<span class="what"><span class="who">' + e[2] + '</span> · ' + e[3] + '</span>' +
+          '<span class="pill ' + e[4] + '">' + e[5] + '</span><time>' + fmt(clock) + '</time>';
+        feed.insertBefore(row, feed.firstChild);
+        setTimeout(function(r){ r.classList.remove('new'); }.bind(null, row), 1600);
+        while (feed.children.length > 6) feed.removeChild(feed.lastChild);
+        if (e[6]) bump(e[6]);
+        // keep the example day believable if someone leaves the page open for hours
+        if (i % 40 === 0){ K.calls.textContent = '14'; K.jobs.textContent = '6'; K.you.textContent = '2'; clock = 19 * 60 + 42; }
+        await sleep(3400);
+      }
+    })();
+  });
+
+  // ── brief → plan: the owner's brief types itself, then the plan fills in
+  var q = document.getElementById('brief-q');
+  var full = q ? q.textContent : '';
+  var steps = Array.prototype.slice.call(document.querySelectorAll('#brief .step'));
+  var live = document.getElementById('brief-live');
+  if (q && live) safe(function(){
+    var bvis = watch(document.getElementById('brief'));
+    return (async function(){
+      for(;;){
+        await until(bvis);
+        live.classList.add('off');
+        steps.forEach(function(s){ s.classList.add('pending'); s.classList.remove('hot'); });
+        var caret = document.createElement('span'); caret.className = 'caret';
+        q.textContent = ''; q.appendChild(caret);
+        for (var c = 0; c < full.length; c++){
+          q.insertBefore(document.createTextNode(full[c]), caret);
+          await sleep(full[c] === ' ' ? 20 : 32);
+        }
+        caret.remove();
+        await sleep(600);
+        for (var s = 0; s < steps.length; s++){
+          steps[s].classList.remove('pending'); steps[s].classList.add('hot');
+          await sleep(750);
+          steps[s].classList.remove('hot');
+        }
+        live.classList.remove('off');
+        await sleep(6000);
+      }
+    })();
+  });
 })();

@@ -5,7 +5,7 @@ three source files and one optional Node script that inlines them.
 
     index.html     markup and copy
     styles.css     design tokens + all styling
-    script.js      theme toggle, scroll reveal, marquee sizing
+    script.js      agent conversations and dashboard animations
     build.js       inlines the above into dist/
     dist/          generated — do not edit by hand
 
@@ -24,46 +24,59 @@ body-only fragment, for hosts that supply their own document shell.
 
 ## Design system
 
-Blueprint cyanotype, adapted from the structural language of ribbitcap.com — Space Mono
-throughout, hard 1px rules, zero border-radius, counter-scrolling marquee bands.
+Light-only, white page with a cool grey canvas band. Loosely inspired by crewplatforms.com,
+but with Groundwork's own brand blue, type and layout.
 
-| token          | light     | dark      |
-| -------------- | --------- | --------- |
-| `--paper`      | `#e8e9e4` | `#0a1633` |
-| `--tint`       | `#dee2e8` | `#0e1d40` |
-| `--ink`        | `#10131c` | `#eef3fb` |
-| `--ink-soft`   | `#4e5666` | `#93a8d0` |
-| `--rule`       | `#b9c0ce` | `#26386e` |
-| `--signal`     | `#1b44e0` | `#3e6bff` |
-| `--signal-ink` | `#ffffff` | `#04091c` |
-| `--void`       | `#0a1633` | `#04091c` |
+| role            | value                                   |
+| --------------- | --------------------------------------- |
+| brand           | `#1b44e0` (buttons, links, closing CTA) |
+| ink / muted     | `#0f1012` / `#6c6c71`                    |
+| canvas          | `#f4f5f8`                                |
+| display type    | Bricolage Grotesque                      |
+| body type       | Hanken Grotesk                           |
+| mono labels     | IBM Plex Mono                            |
 
-Light is the base. Dark is redefined twice — once under `prefers-color-scheme` (guarded
-with `:not([data-theme="light"])`) and once under `[data-theme="dark"]` — so the OS
-setting and the in-page toggle each win in the right direction. Every color comes from a
-token; nothing is declared only inside a media or `[data-theme]` block.
+Each agent has an accent colour (receptionist clay, booking blue, ticket support moss,
+lead finder plum, invoices ochre, knowledge teal), set inline on its card as `--acc`,
+`--acc-soft` and `--acc-glow`. There is deliberately no `color-mix()` anywhere, so older
+iOS Safari renders the same colours.
 
-The toggle persists to `localStorage` under `gw-theme`.
+## Animations
+
+Everything animated lives in `script.js`:
+
+- **Agent cards**: each plays a looping conversation from `SCRIPTS`. Steps are
+  `[speaker, text]` where speaker is `them`, `ai`, `sys`, `ok`, `warn`, `photo`, or a
+  visual card: `cal` (calendar slot), `leads` (verified company list), `mail` (drafted
+  email), `doc` (invoice checked against a PO).
+- **Approval card**: plays Karen's refund thread, then waits for the visitor to click.
+- **Hero dashboard**: new rows arrive every few seconds and the counters tick up.
+- **Brief card**: the owner's brief types itself, then the plan fills in.
+
+Every loop pauses when it's off screen or the tab is hidden, and each runs inside its own
+guard so one failure can't stop the others. With reduced motion switched on, the
+conversations still play, but items fade in place instead of sliding, and the purely
+decorative loops (pulsing dots, shimmer, scanner sweep) are off.
 
 ## Before launch — placeholders to replace
 
 Search the source for these; each is marked with an HTML comment.
 
-1. **Stats** (`#proof`) — `71%`, `<1s`, `22h`, `6wk` are illustrative, not measured.
-   Replace with your own figures or delete the band.
-2. **Testimonials** — all three quotes and the people and companies attributed to them
-   are invented. Swap in real, permissioned quotes before this page is public.
-3. ~~**Contact**~~ — done. "book a call" (nav) and "book a fit call" (CTA) open the
+1. **Example content**: the dashboard numbers, the "Groundwork Solutions" dashboard, and
+   every conversation are illustrative, and the page labels them as examples. Tool names
+   (Jobber, HubSpot, QuickBooks, Calendly) should list only what you can actually connect.
+2. ~~**Contact**~~ — done. "book a call" (nav) and "book a fit call" (CTA) open the
    Google Calendar booking page; the ghost button and the footer link mail
    `dothan@trygroundworksolutions.com`.
-4. **Pricing and process claims** — the six-week timeline, the fixed-fee structure, and
+3. **Pricing and process claims** — the six-week timeline, the fixed-fee structure, and
    the data-handling commitments in the FAQ are written as reasonable defaults. Confirm
    each one matches what you actually offer.
 
 ## Accessibility notes
 
-Skip link, visible focus rings, `prefers-reduced-motion` disables the marquee and the
-scroll reveal, and the marquee bands are `aria-hidden` since they are decorative.
+Skip link, visible focus rings, and the reduced-motion behaviour described under
+Animations. The hero dashboard is a single `role="img"` with a text label, so screen
+readers aren't read a stream of changing rows.
 
-The nav links collapse below 900px; the "book a call" action stays visible at every
+The nav links collapse below 900px; "Book a call" stays visible at every
 width. There is no mobile drawer — if the nav grows past four items, add one.
