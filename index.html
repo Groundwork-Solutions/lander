@@ -98,7 +98,9 @@
       <h2 class="h2">Six agents. Watch them work.</h2>
       <p class="lead">Each one runs on your data inside the tools you already use. These are example conversations. Start with the one that eats the most of your week.</p>
     </div>
-    <div class="fields">
+    <div class="ring" id="ring" aria-roledescription="carousel" aria-label="Agents we build">
+      <div class="ring-stage" id="ring-stage">
+        <div class="fields ring-track" id="ring-track">
       <article class="field" style="--bg:#fdece6;--acc:var(--flame);--acc-soft:rgba(217,98,43,.14);--acc-glow:rgba(217,98,43,.55)">
         <div class="top"><span class="ic"><svg><use href="#i-phone"/></svg></span><h3 class="h3">AI receptionist</h3></div>
         <p>Answers every call on the first ring, qualifies the caller, books what it should, and texts you a summary.</p>
@@ -129,6 +131,14 @@
         <p>Pricing rules, warranty terms, which vendor. Answered from your own files, with the source cited.</p>
         <div class="screen"><div class="chan">Teams · technician</div><div class="thread" data-s="kb"></div></div>
       </article>
+    </div>
+        <div class="ring-floor" aria-hidden="true"></div>
+      </div>
+      <div class="ring-nav">
+        <button type="button" class="ring-arrow" id="ring-prev" aria-label="Previous agent"><svg style="transform:scaleX(-1)"><use href="#i-arrow"/></svg></button>
+        <div class="ring-tabs" id="ring-tabs" role="tablist"></div>
+        <button type="button" class="ring-arrow" id="ring-next" aria-label="Next agent"><svg><use href="#i-arrow"/></svg></button>
+      </div>
     </div>
     <p class="fields-foot">Something else eating your week? That's usually where we start. <a href="https://calendar.app.google/C2f3wrVxgt5ZZfZe9">Tell us what it is</a></p>
   </div>

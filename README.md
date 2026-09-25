@@ -49,6 +49,11 @@ Everything animated lives in `script.js`:
   `[speaker, text]` where speaker is `them`, `ai`, `sys`, `ok`, `warn`, `photo`, or a
   visual card: `cal` (calendar slot), `leads` (verified company list), `mail` (drafted
   email), `doc` (invoice checked against a PO).
+- **Agent ring**: the six agent cards sit on a 3D ring that holds each card at the
+  front for about 5 seconds, then turns. Drag, arrows, tabs or clicking a side card
+  also turn it; hovering holds it. On wide screens (≥ ~1300px) the side notes show
+  what the front agent handles and when it hands back — edit them in `NOTES`. With
+  reduced motion the original grid shows instead.
 - **Approval card**: plays Karen's refund thread, then waits for the visitor to click.
 - **Hero dashboard**: new rows arrive every few seconds and the counters tick up.
 - **Brief card**: the owner's brief types itself, then the plan fills in.

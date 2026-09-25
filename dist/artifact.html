@@ -335,6 +335,111 @@ footer{border-top:1px solid var(--hair);padding-block:40px}
   .btn:active,.actions button:active{transform:none}
 }
 
+/* ── "What we build" as a rotating ring ──
+   The six .field cards are unchanged; carousel.js
+   places each one on a circle and turns it. Without JS, or with reduced motion,
+   the .ring-on class never lands and the original grid shows instead. */
+
+.ring{position:relative}
+.ring-nav{display:none}
+
+.ring.ring-on .ring-stage{
+  position:relative;
+  height:var(--stage-h,560px);
+  touch-action:pan-y;           /* vertical scroll stays native, horizontal drags turn the ring */
+  cursor:grab;
+  -webkit-user-select:none;user-select:none;
+}
+.ring.ring-on .ring-stage.dragging{cursor:grabbing}
+
+/* break out of .wrap to the full viewport width, so side cards can run to the
+   screen edge and the side notes have room on wide screens; clipped there */
+.ring.ring-on{margin-inline:calc(50% - 50vw);overflow:hidden;padding-block:8px 4px}
+
+.ring.ring-on .ring-track{display:block;position:absolute;inset:0;
+  /* perspective only reaches direct children, so it lives here on the cards' parent */
+  perspective:1600px;perspective-origin:50% 30%}
+.ring.ring-on .field{
+  position:absolute;left:50%;top:24px;
+  width:var(--card-w,340px);
+  margin-left:calc(var(--card-w,340px) / -2);
+  transition:box-shadow .5s,filter .5s;   /* transform is driven per frame, so never transitioned */
+  will-change:transform,opacity;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 24px 50px -24px rgba(15,16,18,.28);
+  --th:208px;
+}
+.ring.ring-on .field.is-front{box-shadow:0 1px 2px rgba(0,0,0,.05),0 40px 80px -30px rgba(15,16,18,.42)}
+.ring.ring-on .field:not(.is-front) .screen{pointer-events:none}
+/* the base stylesheet lifts cards on hover; the ring owns transform now */
+@media (hover:hover){.ring.ring-on .field:hover{box-shadow:0 1px 2px rgba(0,0,0,.05),0 40px 80px -30px rgba(15,16,18,.42)}}
+
+/* soft elliptical floor the ring appears to sit on */
+.ring-floor{display:none}
+.ring.ring-on .ring-floor{
+  display:block;position:absolute;left:50%;bottom:6px;
+  width:min(820px,92%);height:70px;transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(closest-side,rgba(27,68,224,.13),rgba(27,68,224,.04) 60%,transparent);
+  pointer-events:none;
+}
+
+/* tabs + arrows */
+.ring.ring-on .ring-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:18px;padding-inline:var(--gutter)}
+.ring-tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.ring-tab{
+  appearance:none;border:1px solid var(--hair-firm);background:var(--surface);color:var(--ink-soft);
+  font:500 13px/1 var(--sans);padding:9px 13px;border-radius:999px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;transition:background .3s,color .3s,border-color .3s;
+}
+.ring-tab i{width:7px;height:7px;border-radius:50%;background:var(--acc);flex:none}
+.ring-tab[aria-selected="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ring-tab:hover{border-color:var(--ink)}
+.ring-arrow{
+  appearance:none;width:40px;height:40px;border-radius:50%;flex:none;cursor:pointer;
+  border:1px solid var(--hair-firm);background:var(--surface);color:var(--ink);
+  display:grid;place-items:center;transition:border-color .2s,background .2s;
+}
+.ring-arrow:hover{border-color:var(--ink)}
+.ring-arrow svg{width:16px;height:16px}
+
+/* thin progress line under the active tab: shows when the ring will turn next */
+.ring-tab{position:relative;overflow:hidden}
+.ring-tab .bar{position:absolute;left:0;bottom:0;height:2px;width:100%;background:rgba(255,255,255,.55);transform-origin:left;transform:scaleX(0)}
+
+.ring-count{display:none;font:500 12px/1 var(--mono);color:var(--ink-muted);min-width:64px;text-align:center;letter-spacing:.04em}
+@media (max-width:640px){
+  .ring-tabs{display:none}          /* six pills won't fit; arrows + swipe do the job */
+  .ring-count{display:block}
+}
+
+/* ── side notes: what the front card's agent handles, and when it hands back.
+   They sit just outside the ring's side cards and swap each time the ring turns.
+   carousel.js sets --edge (how far the side cards reach from centre) and only
+   shows them when there's real room. */
+.ring-note{display:none}
+.ring.ring-on.has-notes .ring-note{
+  display:block;position:absolute;top:50%;
+  width:var(--note-w,220px);
+  transform:translateY(-50%);
+  font-size:.9375rem;line-height:1.5;color:var(--ink-soft);
+  transition:opacity .35s ease,transform .45s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;
+}
+.ring-note.left{right:calc(50% + var(--edge,420px) + 40px);text-align:right}
+.ring-note.right{left:calc(50% + var(--edge,420px) + 40px)}
+.ring-note.swap{opacity:0}
+.ring-note.left.swap{transform:translateY(-50%) translateX(-14px)}
+.ring-note.right.swap{transform:translateY(-50%) translateX(14px)}
+
+.ring-note .eyebrow-n{display:flex;align-items:center;gap:8px;font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:14px}
+.ring-note.left .eyebrow-n{justify-content:flex-end}
+.ring-note .eyebrow-n i{width:7px;height:7px;border-radius:50%;background:var(--acc);flex:none}
+.ring-note ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ring-note li{color:var(--ink)}
+.ring-note .rule{height:1px;background:var(--hair-firm);margin:18px 0}
+.ring-note p{margin:0;color:var(--ink)}
+.ring-note .tools{font:500 12px/1.6 var(--mono);color:var(--ink-muted);letter-spacing:.02em}
+
 </style>
 
 <a class="skip" href="#build">Skip to content</a>
@@ -416,7 +521,9 @@ footer{border-top:1px solid var(--hair);padding-block:40px}
       <h2 class="h2">Six agents. Watch them work.</h2>
       <p class="lead">Each one runs on your data inside the tools you already use. These are example conversations. Start with the one that eats the most of your week.</p>
     </div>
-    <div class="fields">
+    <div class="ring" id="ring" aria-roledescription="carousel" aria-label="Agents we build">
+      <div class="ring-stage" id="ring-stage">
+        <div class="fields ring-track" id="ring-track">
       <article class="field" style="--bg:#fdece6;--acc:var(--flame);--acc-soft:rgba(217,98,43,.14);--acc-glow:rgba(217,98,43,.55)">
         <div class="top"><span class="ic"><svg><use href="#i-phone"/></svg></span><h3 class="h3">AI receptionist</h3></div>
         <p>Answers every call on the first ring, qualifies the caller, books what it should, and texts you a summary.</p>
@@ -447,6 +554,14 @@ footer{border-top:1px solid var(--hair);padding-block:40px}
         <p>Pricing rules, warranty terms, which vendor. Answered from your own files, with the source cited.</p>
         <div class="screen"><div class="chan">Teams · technician</div><div class="thread" data-s="kb"></div></div>
       </article>
+    </div>
+        <div class="ring-floor" aria-hidden="true"></div>
+      </div>
+      <div class="ring-nav">
+        <button type="button" class="ring-arrow" id="ring-prev" aria-label="Previous agent"><svg style="transform:scaleX(-1)"><use href="#i-arrow"/></svg></button>
+        <div class="ring-tabs" id="ring-tabs" role="tablist"></div>
+        <button type="button" class="ring-arrow" id="ring-next" aria-label="Next agent"><svg><use href="#i-arrow"/></svg></button>
+      </div>
     </div>
     <p class="fields-foot">Something else eating your week? That's usually where we start. <a href="https://calendar.app.google/C2f3wrVxgt5ZZfZe9">Tell us what it is</a></p>
   </div>
@@ -947,6 +1062,241 @@ footer{border-top:1px solid var(--hair);padding-block:40px}
       }
     })();
   });
+})();
+
+/* Turns the "What we build" grid into a slowly turning ring of cards.
+   The conversation loop above already plays each card's thread; this part only
+   moves the cards.
+
+   Motion model: `pos` is where the ring is pointing, in cards (0 = first card
+   front and centre, 2.5 = halfway between the third and fourth). Every DWELL ms
+   `target` steps forward by one and `pos` eases toward it, so the ring glides to
+   the next card and then holds still long enough to read it. Dragging moves
+   `pos` directly; letting go snaps to the nearest card. */
+(function(){
+  var ring = document.getElementById('ring');
+  var stage = document.getElementById('ring-stage');
+  var tabsBox = document.getElementById('ring-tabs');
+  if (!ring || !stage) return;
+  // reduced motion: leave the original grid in place
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var cards = Array.prototype.slice.call(ring.querySelectorAll('.field'));
+  var N = cards.length;
+  if (N < 3) return;
+
+  var DWELL = 5200;          // ms a card sits at the front before the ring turns
+  var EASE_TAU = 260;        // ms; bigger = lazier glide between cards
+  var STEP = 360 / N;        // degrees between neighbouring cards
+
+  var pos = 0, target = 0, held = 0;
+  var radius = 340, cardW = 340;
+  var paused = false, onScreen = true, dragging = null;
+  var lastFront = -1;
+
+  // Side notes, keyed by each card's conversation id (data-s). Every line restates
+  // or narrows something the page already says: card copy, the approvals section,
+  // or the tool list under "Your tools, your permissions".
+  var NOTES = {
+    rec:  {does:['Answers on the first ring, day or night','Qualifies the caller','Books real jobs into your calendar'],
+           back:'Big quotes and anything outside your rules get texted to you with a summary.',
+           tools:'Your existing number · SMS · Google Calendar'},
+    book: {does:['Takes requests by text, email or web','Checks real availability first','Confirms, reminds and reschedules'],
+           back:'Anything it can’t fit without breaking a rule you set comes to you.',
+           tools:'Google · Outlook · Calendly'},
+    tix:  {does:['Finds the answer in your docs and order history','Replies in your voice','Logs every action it takes'],
+           back:'Refunds over your limit and the hard cases go to a person.',
+           tools:'Gmail · Outlook · help desks'},
+    lead: {does:['Finds companies like your best customers','Verifies the contact','Drafts the opener'],
+           back:'You see the list and the drafts. You decide who hears from you.',
+           tools:'Slack · HubSpot'},
+    inv:  {does:['Reads invoices and POs','Checks them against what you expected','Posts the ones that match'],
+           back:'Only what’s wrong, flagged line by line.',
+           tools:'Accounts inbox · QuickBooks'},
+    kb:   {does:['Pricing rules and warranty terms','Which vendor, which part','Answered from your own files, source cited'],
+           back:'Questions your files don’t cover go to the person who knows.',
+           tools:'Teams · Slack · your own files'}
+  };
+
+  function mod(n, m){ return ((n % m) + m) % m; }
+  function front(){ return mod(Math.round(pos), N); }
+
+  ring.classList.add('ring-on');
+
+  // ── tabs, one per card, coloured with that card's accent
+  var tabs = cards.map(function(card, i){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'ring-tab'; b.setAttribute('role', 'tab');
+    b.style.setProperty('--acc', getComputedStyle(card).getPropertyValue('--acc'));
+    b.innerHTML = '<i></i>' + card.querySelector('.h3').textContent + '<span class="bar"></span>';
+    b.addEventListener('click', function(){ goTo(i); });
+    tabsBox.appendChild(b);
+    card.setAttribute('aria-roledescription', 'slide');
+    card.setAttribute('aria-label', (i + 1) + ' of ' + N);
+    return b;
+  });
+  var notes = ['left', 'right'].map(function(side){
+    var el = document.createElement('div');
+    el.className = 'ring-note ' + side;
+    stage.appendChild(el);
+    return el;
+  });
+  var noteTimer = null;
+  function fillNotes(i){
+    var card = cards[i], thread = card.querySelector('.thread[data-s]');
+    var n = thread && NOTES[thread.getAttribute('data-s')];
+    if (!n) return;
+    var acc = getComputedStyle(card).getPropertyValue('--acc');
+    var name = card.querySelector('.h3').textContent;
+    notes[0].style.setProperty('--acc', acc);
+    notes[1].style.setProperty('--acc', acc);
+    notes[0].innerHTML = '<div class="eyebrow-n">Handles on its own<i></i></div><ul>' +
+      n.does.map(function(d){ return '<li>' + d + '</li>'; }).join('') + '</ul>';
+    notes[1].innerHTML = '<div class="eyebrow-n"><i></i>' + name + ' · hands back</div><p>' + n.back +
+      '</p><div class="rule"></div><div class="eyebrow-n">Works inside</div><div class="tools">' + n.tools + '</div>';
+  }
+  // fade out, swap the words while invisible, fade back in
+  function swapNotes(i){
+    clearTimeout(noteTimer);
+    notes.forEach(function(el){ el.classList.add('swap'); });
+    noteTimer = setTimeout(function(){
+      fillNotes(i);
+      notes.forEach(function(el){ el.classList.remove('swap'); });
+    }, 300);
+  }
+
+  var count = document.createElement('span');
+  count.className = 'ring-count';
+  tabsBox.parentNode.insertBefore(count, tabsBox.nextSibling);
+
+  // shortest way round to card i
+  function goTo(i){
+    var d = mod(i - target, N);
+    if (d > N / 2) d -= N;
+    target += d; held = 0;
+  }
+  function step(n){ target = Math.round(target) + n; held = 0; }
+  document.getElementById('ring-prev').addEventListener('click', function(){ step(-1); });
+  document.getElementById('ring-next').addEventListener('click', function(){ step(1); });
+  ring.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight'){ step(1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft'){ step(-1); e.preventDefault(); }
+  });
+
+  // ── size: card width follows the viewport, radius follows the card width
+  function layout(){
+    var vw = document.documentElement.clientWidth;
+    cardW = Math.min(340, Math.round(vw * 0.8));
+    // the distance at which N cards of this width just touch, plus breathing room
+    radius = Math.round((cardW / 2) / Math.tan(Math.PI / N) + (vw < 640 ? 24 : 70));
+    ring.style.setProperty('--card-w', cardW + 'px');
+    var tallest = 0;
+    cards.forEach(function(c){ tallest = Math.max(tallest, c.offsetHeight); });
+    ring.style.setProperty('--stage-h', (tallest + 70) + 'px');
+
+    // How far the side cards (one step round the ring) reach from the centre on
+    // screen: their outer edge, projected through the stage's perspective.
+    var th = 2 * Math.PI / N;
+    var ex = (cardW / 2) * Math.cos(th) + radius * Math.sin(th);
+    var ez = -(cardW / 2) * Math.sin(th) + radius * Math.cos(th) - radius;
+    var edge = Math.round(ex * 1600 / (1600 - ez));
+    // notes only when each side has room for a readable column
+    var room = vw / 2 - edge - 40 - 32;
+    var noteW = Math.min(250, room);
+    ring.style.setProperty('--edge', edge + 'px');
+    ring.style.setProperty('--note-w', noteW + 'px');
+    ring.classList.toggle('has-notes', noteW >= 180);
+  }
+  layout();
+  window.addEventListener('resize', layout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+
+  // ── render one frame: place every card on the circle
+  function render(t){
+    var sway = Math.sin(t / 2600) * 1.6;   // a slow idle drift so the ring never looks frozen
+    cards.forEach(function(card, i){
+      var off = i - pos;
+      off = mod(off + N / 2, N) - N / 2;   // wrap so every card takes the short way round
+      var deg = off * STEP + sway;
+      var c = Math.cos(deg * Math.PI / 180);
+      var near = (c + 1) / 2;              // 1 at the front, 0 directly behind
+      card.style.transform = 'translateZ(' + (-radius) + 'px) rotateY(' + deg.toFixed(2) + 'deg) translateZ(' + radius + 'px)';
+      // front half of the ring is solid so nothing ghosts through it; the back half fades out
+      card.style.opacity = (c >= 0 ? 1 : Math.max(0, 1 + c / 0.6) * 0.55).toFixed(3);
+      card.style.zIndex = Math.round(near * 100);
+      // side cards go slightly grey and soft so the front one reads first
+      card.style.filter = c > 0.95 ? '' : 'saturate(' + (0.55 + 0.45 * c).toFixed(2) + ') brightness(' + (0.9 + 0.1 * c).toFixed(3) + ')' + (c < 0.2 ? ' blur(' + ((0.2 - c) * 2.2).toFixed(1) + 'px)' : '');
+    });
+    var f = front();
+    if (f !== lastFront){
+      lastFront = f;
+      cards.forEach(function(c, i){
+        var on = i === f;
+        c.classList.toggle('is-front', on);
+        c.setAttribute('aria-hidden', on ? 'false' : 'true');
+        tabs[i].setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      count.textContent = (f + 1) + ' / ' + N;
+      swapNotes(f);
+    }
+    tabs.forEach(function(tb, i){
+      tb.querySelector('.bar').style.transform = 'scaleX(' + (i === f ? Math.min(held / DWELL, 1) : 0) + ')';
+    });
+  }
+
+  var last = performance.now();
+  function frame(t){
+    var dt = Math.min(t - last, 250); last = t;   // capped so a long stall (tab switch) doesn't jump the ring
+    if (!dragging){
+      pos += (target - pos) * (1 - Math.exp(-dt / EASE_TAU));
+      if (Math.abs(target - pos) < 0.001) pos = target;
+      var settled = Math.abs(target - pos) < 0.02;
+      if (settled && !paused && onScreen && !document.hidden){
+        held += dt;
+        if (held >= DWELL){ target += 1; held = 0; }
+      }
+    }
+    if (onScreen) render(t);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ onScreen = es[es.length - 1].isIntersecting; }, {threshold:0.15}).observe(stage);
+  }
+
+  // hovering the ring (mouse only) or focusing inside it holds the current card
+  stage.addEventListener('mouseenter', function(){ paused = true; });
+  stage.addEventListener('mouseleave', function(){ paused = false; });
+  ring.addEventListener('focusin', function(){ paused = true; });
+  ring.addEventListener('focusout', function(){ paused = false; });
+
+  // ── drag / swipe to spin; a short tap on a side card brings it to the front
+  stage.addEventListener('pointerdown', function(e){
+    if (e.button !== undefined && e.button !== 0) return;
+    dragging = {x: e.clientX, y: e.clientY, pos0: pos, moved: false, id: e.pointerId, card: e.target.closest('.field')};
+  });
+  window.addEventListener('pointermove', function(e){
+    if (!dragging || e.pointerId !== dragging.id) return;
+    var dx = e.clientX - dragging.x;
+    if (!dragging.moved && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(e.clientY - dragging.y)){
+      dragging.moved = true; stage.classList.add('dragging');
+      try { stage.setPointerCapture(e.pointerId); } catch(_){}
+    }
+    if (dragging.moved) pos = dragging.pos0 - dx / (cardW * 0.85);
+  });
+  function release(e){
+    if (!dragging || e.pointerId !== dragging.id) return;
+    if (dragging.moved){
+      target = Math.round(pos); held = 0;
+    } else if (dragging.card){
+      var i = cards.indexOf(dragging.card);
+      if (i !== front()) goTo(i);
+    }
+    dragging = null; stage.classList.remove('dragging');
+  }
+  window.addEventListener('pointerup', release);
+  window.addEventListener('pointercancel', release);
 })();
 
 </script>
