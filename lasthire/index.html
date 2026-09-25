@@ -19,6 +19,9 @@
 <link rel="stylesheet" href="/styles.css">
 <style>
   /* lasthire.ai page: reuses the Groundwork design system in /styles.css, plus these few pieces. */
+  .disclaimer{margin:14px 0 0;max-width:560px;padding:12px 14px;border:1px solid var(--hair-firm);border-radius:12px;background:var(--canvas);font-size:.8125rem;line-height:1.5;color:var(--ink-muted)}
+  .disclaimer b{color:var(--ink);font-weight:600}
+  .foot-disclaimer{margin:18px 0 0;max-width:720px;font-size:.75rem;line-height:1.55;color:var(--ink-faint)}
   .logo small{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.02em;color:var(--ink-faint);margin-left:4px;white-space:nowrap}
   @media (max-width:900px){.logo small{display:none}}
   .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
@@ -123,6 +126,7 @@
         <a class="btn btn-line btn-lg" href="#tour"><svg class="play"><use href="#i-play"/></svg>Watch the tour</a>
       </div>
       <p class="caption fade" style="--d:560ms">No sign-up · Runs in your browser · Fictional sample loan file</p>
+      <p class="disclaimer fade" style="--d:620ms"><b>Illustrative example.</b> The live demo runs on a fictional loan file to show how lasthire.ai works. It is not a finished product: every deployment is built around your lending, including your credit policy, loan programs, documents, approval workflow and existing systems.</p>
     </div>
 
     <div class="card fcard fade" style="--d:300ms" role="img" aria-label="Example findings for sample loan LN-2026-0142: appraisal 12.6% above comps, undisclosed $184K deed of trust, altered bank statement, draw 4 over the line">
@@ -301,6 +305,7 @@
         <a class="btn btn-line btn-lg" href="https://lasthire-demo.vercel.app" target="_blank" rel="noopener">Try the live demo</a>
       </div>
       <span class="email">dothan@trygroundworksolutions.com</span>
+      <p style="margin:14px auto 0;max-width:560px;font-size:.8125rem;opacity:.8">The demo is an example. What we build for you is tailored to how your team underwrites.</p>
     </div>
   </div>
 </section>
@@ -320,6 +325,7 @@
         <a href="https://lasthire-demo.vercel.app" target="_blank" rel="noopener">Live demo</a>
       </nav>
     </div>
+    <p class="foot-disclaimer">Disclaimer: the lasthire.ai demo, tour and walkthrough are illustrative examples built on fictional borrowers, properties and documents. Features, figures and workflows shown are for demonstration only and do not represent any lender's data or credit decisions. Each solution is scoped and tailored to the client's credit policy, loan programs, document types, workflows and systems.</p>
     <p class="copy">© 2026 Groundwork Solutions LLC · In partnership with Rodeo Lending</p>
   </div>
 </footer>
