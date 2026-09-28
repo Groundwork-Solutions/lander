@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    { "source": "/crm", "destination": "/crm/", "permanent": false },
+    { "source": "/lasthire", "destination": "/lasthire/", "permanent": false },
+    { "source": "/trades", "destination": "/trades/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/crm/", "destination": "https://groundwork-au-pipeline.vercel.app/" },
+    { "source": "/crm/:path*", "destination": "https://groundwork-au-pipeline.vercel.app/:path*" },
+    { "source": "/lasthire/", "destination": "https://lasthire.vercel.app/" },
+    { "source": "/lasthire/:path*", "destination": "https://lasthire.vercel.app/:path*" },
+    { "source": "/trades/", "destination": "https://groundwork-trades.vercel.app/" },
+    { "source": "/trades/:path*", "destination": "https://groundwork-trades.vercel.app/:path*" }
+  ]
+}
