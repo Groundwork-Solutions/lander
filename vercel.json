@@ -10,6 +10,7 @@
     { "source": "/lasthire/", "destination": "https://lasthire.vercel.app/" },
     { "source": "/lasthire/:path*", "destination": "https://lasthire.vercel.app/:path*" },
     { "source": "/trades/", "destination": "https://groundwork-trades.vercel.app/" },
+    { "source": "/trades/:dir/", "destination": "https://groundwork-trades.vercel.app/:dir/index.html" },
     { "source": "/trades/:path*", "destination": "https://groundwork-trades.vercel.app/:path*" }
   ]
 }
