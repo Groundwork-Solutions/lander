@@ -74,6 +74,15 @@
       ['ai','Posted to QuickBooks. Line 9 is held with a note.'],
       ['ok','✓ Posted · 1 exception']
     ],
+    sup: [
+      ['sys','Sat 11:42pm · message to your engineers'],
+      ['them','The booking bot just sent a customer last week’s address.'],
+      ['ai','On it. Checking the logs now.'],
+      ['sys','Cause found · the calendar app renamed a field today'],
+      ['ai','Fixed. 2 bookings were affected. Both customers have been re-sent the right address.'],
+      ['them','That was quick, thank you.'],
+      ['ok','✓ Ticket closed in 18 min · in your monthly report']
+    ],
     kb: [
       ['them','What’s the warranty on the RX-40?'],
       ['sys','Searched manuals + price lists'],
@@ -188,100 +197,26 @@
     })();
   }); });
 
-  // ── approval card: full back-and-forth, then waits for the visitor to decide
-  var KAREN = [
-    ['them','The 3/4" brass fitting from order #51207 arrived cracked. I can’t finish the job with it.'],
-    ['ai','Sorry about that, Karen. Could you send a photo of the crack?'],
-    ['photo','Here you go.'],
-    ['sys','Photo checked · matches damage-in-transit policy'],
-    ['ai','Thanks, that’s shipping damage. Would you like a replacement sent today, or a full refund of $84.00?'],
-    ['them','Refund please. I already bought one locally.'],
-    ['warn','Refund over $50 → held for your approval']
-  ];
-  var LABELS = {them:'Karen M.', ai:'Agent'};
-  var apv = {
-    card: document.getElementById('approve'),
-    box: document.getElementById('apv-thread'),
-    panel: document.getElementById('apv-panel'),
-    pill: document.getElementById('apv-pill'),
-    draft: document.getElementById('apv-draft'),
-    edit: document.getElementById('apv-edit')
-  };
-  var decide = null;
-  function setPill(cls, txt){ apv.pill.className = 'pill ' + cls; apv.pill.textContent = txt; }
-  function draftText(){
-    var clone = apv.draft.cloneNode(true);
-    var meta = clone.querySelector('.meta'); if (meta) meta.remove();
-    return clone.textContent.trim();
-  }
-  document.getElementById('apv-yes').addEventListener('click', function(){ decide && decide('yes'); });
-  document.getElementById('apv-back').addEventListener('click', function(){ decide && decide('back'); });
-  apv.edit.addEventListener('click', function(){
-    apv.draft.contentEditable = 'true'; apv.draft.focus(); apv.edit.textContent = 'Editing…';
-  });
-
-  // The buttons only appear once the conversation reaches the approval step,
-  // so a tap can never land on a button that isn't listening yet.
-  renderStatic(apv.box, KAREN, LABELS);
-  apv.panel.hidden = true;
-  setPill('p-hand', 'Handling');
-
-  async function resolve(choice){
-    apv.panel.hidden = true;
-    apv.draft.contentEditable = 'false'; apv.edit.textContent = 'Edit';
-    if (choice === 'yes'){
-      apv.box.appendChild(bubble('ai', draftText(), LABELS.ai));
-      await sleep(600);
-      apv.box.appendChild(bubble('ok', '✓ Approved by you · sent · reversible for 24h'));
-      setPill('p-done', 'Sent');
-      await sleep(1400);
-      apv.box.appendChild(bubble('them', 'That was fast. Thank you!', LABELS.them));
-    } else {
-      apv.box.appendChild(bubble('sys', 'Sent back to the agent with your note'));
-      setPill('p-hand', 'Returned');
-    }
-    trim(apv.box);
-  }
-
-  safe(function(){
-    var avis = watch(apv.card);
-    var original = apv.draft.innerHTML;
-    return (async function loop(){
-      for(;;){
-        await until(avis);
-        apv.box.innerHTML = ''; apv.panel.hidden = true; apv.draft.innerHTML = original;
-        setPill('p-hand', 'Handling');
-        await play(apv.box, KAREN, avis, LABELS);
-        await sleep(500);
-        apv.panel.hidden = false; setPill('p-you', 'Needs you');
-        var choice = await new Promise(function(r){ decide = function(c){ decide = null; r(c); }; });
-        await resolve(choice);
-        await sleep(6500);
-        apv.box.classList.add('fading'); await sleep(450); apv.box.classList.remove('fading');
-      }
-    })();
-  });
-
-  // ── hero dashboard: new activity keeps arriving
+  // ── hero dashboard: a week of work from the client's Groundwork team
+  // [colour, icon, what happened, detail, pill class, pill text, kpi to bump, by how much]
   var POOL = [
-    ['flame','i-phone','Receptionist','After-hours call, water heater quote booked','p-done','Done','calls'],
-    ['blue','i-cal','Booking','Rescheduled Mrs. Ortiz to Fri 10am','p-done','Done','jobs'],
-    ['jade','i-inbox','Ticket support','Answered 3 “where’s my order” emails','p-done','Done',null],
-    ['violet','i-target','Lead finder','5 new property managers researched','p-done','Done',null],
-    ['flame','i-phone','Receptionist','Caller asked for a $6k repipe quote','p-hand','Handed off','calls'],
-    ['amber','i-doc','Invoices','Ferguson invoice posted, all lines match','p-done','Done',null],
-    ['blue','i-cal','Booking','New drain cleaning booked Sat 9am','p-done','Done','jobs'],
-    ['jade','i-inbox','Ticket support','Refund request over $50 drafted','p-you','Needs you','you']
+    ['brand','i-check','Went live','Missed-call text-back, watched by us','p-done','Live','wf',1],
+    ['jade','i-shield','Fixed','Booking app changed its API, workflow updated','p-done','Fixed',null,0],
+    ['flame','i-inbox','Your ticket','Change the wording on quote follow-ups','p-done','Done','hrs',2],
+    ['blue','i-chat','Weekly call','New idea: reorder alerts from stock levels','p-hand','Priced','hrs',3],
+    ['teal','i-doc','Report','Morning sales brief sent to the owner','p-done','Sent','hrs',1],
+    ['brand','i-check','Went live','Supplier invoices checked against POs','p-done','Live','wf',1],
+    ['jade','i-shield','Monitoring','All workflows healthy, 0 open issues','p-done','OK','hrs',2],
+    ['amber','i-target','Spec ready','Lead research workflow, waiting for your yes','p-you','Your call',null,0]
   ];
   var feed = document.getElementById('feed');
-  var K = {calls: document.getElementById('k-calls'), jobs: document.getElementById('k-jobs'), you: document.getElementById('k-you')};
-  function bump(key){
-    var el = K[key]; if (!el) return;
-    el.textContent = String(parseInt(el.textContent, 10) + 1);
+  var K = {wf: document.getElementById('k-wf'), hrs: document.getElementById('k-hrs')};
+  function bump(key, n){
+    var el = K[key]; if (!el || !n) return;
+    el.textContent = String(parseInt(el.textContent, 10) + n);
     el.classList.add('bump'); setTimeout(function(){ el.classList.remove('bump'); }, 900);
   }
-  var clock = 19 * 60 + 42;
-  function fmt(m){ var hh = Math.floor(m / 60) % 24, mm = m % 60, ap = hh >= 12 ? 'p' : 'a'; hh = hh % 12 || 12; return hh + ':' + (mm < 10 ? '0' : '') + mm + ap; }
+  var DAYS = ['Mon','Tue','Wed','Thu','Fri'];
   if (feed) safe(function(){
     var fvis = watch(document.getElementById('app'));
     return (async function(){
@@ -290,19 +225,18 @@
       for(;;){
         await until(fvis);
         var e = POOL[i++ % POOL.length];
-        clock += 3 + Math.floor(Math.random() * 7);
         var row = document.createElement('div');
         row.className = 'row new';
         var ink = e[0] === 'amber' ? ';color:#171310' : '';
         row.innerHTML = '<span class="av" style="background:var(--' + e[0] + ')' + ink + '"><svg><use href="#' + e[1] + '"/></svg></span>' +
           '<span class="what"><span class="who">' + e[2] + '</span> · ' + e[3] + '</span>' +
-          '<span class="pill ' + e[4] + '">' + e[5] + '</span><time>' + fmt(clock) + '</time>';
+          '<span class="pill ' + e[4] + '">' + e[5] + '</span><time>' + DAYS[i % 5] + '</time>';
         feed.insertBefore(row, feed.firstChild);
         setTimeout(function(r){ r.classList.remove('new'); }.bind(null, row), 1600);
         while (feed.children.length > 6) feed.removeChild(feed.lastChild);
-        if (e[6]) bump(e[6]);
-        // keep the example day believable if someone leaves the page open for hours
-        if (i % 40 === 0){ K.calls.textContent = '14'; K.jobs.textContent = '6'; K.you.textContent = '2'; clock = 19 * 60 + 42; }
+        bump(e[6], e[7]);
+        // keep the example believable if someone leaves the page open for hours
+        if (i % 40 === 0){ K.wf.textContent = '7'; K.hrs.textContent = '38'; }
         await sleep(3400);
       }
     })();
@@ -371,8 +305,7 @@
   var lastFront = -1;
 
   // Side notes, keyed by each card's conversation id (data-s). Every line restates
-  // or narrows something the page already says: card copy, the approvals section,
-  // or the tool list under "Your tools, your permissions".
+  // or narrows something the card copy already says.
   var NOTES = {
     rec:  {does:['Answers on the first ring, day or night','Qualifies the caller','Books real jobs into your calendar'],
            back:'Big quotes and anything outside your rules get texted to you with a summary.',
@@ -573,4 +506,38 @@
   }
   window.addEventListener('pointerup', release);
   window.addEventListener('pointercancel', release);
+})();
+
+/* Contact form: posts to /api/contact, which emails it to us. Without JS the
+   form still posts, but the visitor would land on raw JSON, so JS is the path. */
+(function(){
+  var form = document.getElementById('contact');
+  if (!form) return;
+  var status = document.getElementById('contact-status');
+  var btn = form.querySelector('button[type="submit"]');
+  function say(text, cls){ status.textContent = text; status.className = 'f-status' + (cls ? ' ' + cls : ''); }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var data = {};
+    Array.prototype.forEach.call(form.elements, function(el){ if (el.name) data[el.name] = el.value; });
+    var bad = null;
+    [['name', data.name.trim()], ['email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())], ['message', data.message.trim().length >= 5]]
+      .forEach(function(c){
+        var el = form.elements[c[0]];
+        el.setAttribute('aria-invalid', c[1] ? 'false' : 'true');
+        if (!c[1] && !bad) bad = el;
+      });
+    if (bad){ say('Please add your name, a valid email and what you want built.', 'err'); bad.focus(); return; }
+
+    btn.disabled = true; say('Sending…');
+    fetch(form.action, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)})
+      .then(function(r){ return r.json().catch(function(){ return {ok:false}; }); })
+      .then(function(res){
+        if (res.ok){ form.reset(); say('Thanks. It’s with us, and we’ll reply within one business day.', 'ok'); }
+        else say(res.error || 'That didn’t send. Please email dothan@trygroundworksolutions.com.', 'err');
+      })
+      .catch(function(){ say('That didn’t send. Please email dothan@trygroundworksolutions.com.', 'err'); })
+      .then(function(){ btn.disabled = false; });
+  });
 })();
