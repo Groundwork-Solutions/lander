@@ -2,8 +2,8 @@
 
 Static landing page for Groundwork Solutions, positioned as an outsourced AI
 engineering team. The copy follows `material/company/groundwork-company-overview.pdf`
-for who we are, what we offer, plans and working together, with extra sections for the
-idea-to-running flow, what we can build and 24/7 support. The offer is **the first
+for who we are, what we offer, plans and working together. The page is kept short: one
+section per topic, with the agent ring doing most of the "what we build" work. The offer is **the first
 workflow free for 14 days from the day it goes live** (the PDF still says 30 days). No framework, no build dependencies — three source
 files, the team photos in `team/`, and one optional Node script that inlines them.
 
@@ -71,7 +71,6 @@ Everything animated lives in `script.js`:
   reduced motion the original grid shows instead.
 - **Hero feed**: an example client's week from their Groundwork team — workflows going
   live, fixes, weekly calls, reports. New rows arrive every few seconds (`POOL`).
-- **Weekly-call card**: the client's request types itself, then the spec fills in.
 
 Every loop pauses when it's off screen or the tab is hidden, and each runs inside its own
 guard so one failure can't stop the others. With reduced motion switched on, the
