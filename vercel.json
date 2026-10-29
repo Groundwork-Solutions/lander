@@ -3,7 +3,8 @@
     { "source": "/crm", "destination": "/crm/", "permanent": false },
     { "source": "/lasthire", "destination": "/lasthire/", "permanent": false },
     { "source": "/trades", "destination": "/trades/", "permanent": false },
-    { "source": "/dialer", "destination": "/dialer/", "permanent": false }
+    { "source": "/dialer", "destination": "/dialer/", "permanent": false },
+    { "source": "/outreach", "destination": "/outreach/", "permanent": false }
   ],
   "rewrites": [
     { "source": "/crm/", "destination": "https://groundwork-au-pipeline.vercel.app/" },
@@ -14,6 +15,8 @@
     { "source": "/trades/:dir/", "destination": "https://groundwork-trades.vercel.app/:dir/index.html" },
     { "source": "/trades/:path*", "destination": "https://groundwork-trades.vercel.app/:path*" },
     { "source": "/dialer/", "destination": "https://dialer.bibbinsazi.workers.dev/" },
-    { "source": "/dialer/:path*", "destination": "https://dialer.bibbinsazi.workers.dev/:path*" }
+    { "source": "/dialer/:path*", "destination": "https://dialer.bibbinsazi.workers.dev/:path*" },
+    { "source": "/outreach/", "destination": "https://groundwork-outreach.vercel.app/" },
+    { "source": "/outreach/:path*", "destination": "https://groundwork-outreach.vercel.app/:path*" }
   ]
 }
