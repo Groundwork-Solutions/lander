@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>From a photo to sold: example build | Groundwork</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="One example of how your listing process could work, from a photo to a live listing on eBay and AuctionFlex 360.">
+<meta property="og:title" content="From a photo to sold">
+<meta property="og:description" content="One example of how your listing process could work.">
+<meta property="og:image" content="https://www.trygroundworksolutions.com/auction-demo/poster.jpg">
+<meta property="og:type" content="video.other">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--canvas:#f4f5f8;--ink:#0f1012;--muted:#6c6c71;--hair:rgba(0,0,0,.08);--brand:#1b44e0;--positive:#12a06a;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;--sans:"Hanken Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --gutter:clamp(16px,4vw,40px)}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin-inline:auto;padding-inline:var(--gutter)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font-family:var(--display);display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.15rem;letter-spacing:-.04em}
+.logo-mark{width:26px;height:26px;border-radius:8px;background:var(--brand);color:#fff;display:grid;place-items:center}
+.logo-mark svg{width:16px;height:16px}
+.chip{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--brand);border:1px solid var(--hair);border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:7px}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--positive)}
+.hero{padding:clamp(28px,6vw,64px) 0 28px}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:0 0 12px}
+h1{font-family:var(--display);font-weight:700;letter-spacing:-.045em;line-height:1;font-size:clamp(2.4rem,6vw,4.2rem);margin:0 0 14px}
+.sub{color:var(--muted);font-size:clamp(1.02rem,1.6vw,1.18rem);max-width:620px;margin:0}
+.player{margin:8px 0 0;border-radius:16px;overflow:hidden;background:var(--canvas);border:1px solid var(--hair);box-shadow:0 1px 0 rgba(0,0,0,.03),0 34px 80px -28px rgba(15,16,18,.25)}
+video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:var(--canvas)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:36px 0 56px;padding:0;list-style:none}
+.steps li{background:var(--canvas);border-radius:14px;padding:18px 18px 20px}
+.steps b{display:block;font-family:var(--display);font-size:1.12rem;letter-spacing:-.02em;margin-bottom:4px}
+.steps span{color:var(--muted);font-size:.95rem}
+.n{font-family:var(--mono);font-size:.72rem;color:var(--brand);letter-spacing:.08em;display:block;margin-bottom:8px}
+footer{border-top:1px solid var(--hair);padding:22px 0 30px;color:var(--muted);font-size:.88rem}
+@media (max-width:720px){.steps{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <span class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v7m0 0-5 5v5m5-10 5 5v5m-5-10v10"/></g></svg></span>groundwork</span>
+    <span class="chip">EXAMPLE BUILD</span>
+  </div>
+</header>
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">AuctionFlex 360 + eBay</p>
+    <h1>From a photo to sold.</h1>
+    <p class="sub">One example of how your listing process could work. Yours would be built around your items, your steps and your rules.</p>
+  </section>
+  <div class="player">
+    <video controls playsinline preload="metadata" poster="/auction-demo/poster.jpg">
+      <source src="/auction-demo/demo.mp4" type="video/mp4">
+    </video>
+  </div>
+  <ol class="steps">
+    <li><span class="n">01</span><b>Upload photos</b><span>Your team drops item photos into your own private portal. No typing.</span></li>
+    <li><span class="n">02</span><b>Check and approve</b><span>A finished draft comes back with condition notes, comps, a suggested price and the listing written. Your team edits anything and approves.</span></li>
+    <li><span class="n">03</span><b>Live on both</b><span>It goes live on eBay and AuctionFlex 360 together. When it sells, both sides update.</span></li>
+  </ol>
+</main>
+<footer><div class="wrap">Groundwork Solutions LLC</div></footer>
+</body>
+</html>

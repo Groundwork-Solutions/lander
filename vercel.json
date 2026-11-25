@@ -4,7 +4,8 @@
     { "source": "/lasthire", "destination": "/lasthire/", "permanent": false },
     { "source": "/trades", "destination": "/trades/", "permanent": false },
     { "source": "/dialer", "destination": "/dialer/", "permanent": false },
-    { "source": "/outreach", "destination": "/outreach/", "permanent": false }
+    { "source": "/outreach", "destination": "/outreach/", "permanent": false },
+    { "source": "/auction-demo", "destination": "/auction-demo/", "permanent": false }
   ],
   "rewrites": [
     { "source": "/crm/", "destination": "https://groundwork-au-pipeline.vercel.app/" },
