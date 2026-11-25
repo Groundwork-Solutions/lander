@@ -15,33 +15,103 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-:root{--canvas:#f4f5f8;--ink:#0f1012;--muted:#6c6c71;--hair:rgba(0,0,0,.08);--brand:#1b44e0;--positive:#12a06a;
+:root{--canvas:#f4f5f8;--ink:#0f1012;--ink-soft:#3d3d40;--muted:#6c6c71;--hair:rgba(0,0,0,.08);--brand:#1b44e0;--brand-soft:#eef2fe;--positive:#12a06a;--positive-soft:#e7f6ef;--attention:#b8740f;--attention-soft:#fbf3e6;
   --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;--sans:"Hanken Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --gutter:clamp(16px,4vw,40px)}
+  --gutter:clamp(16px,4vw,40px);--shadow:0 1px 0 rgba(0,0,0,.03),0 34px 80px -28px rgba(15,16,18,.25)}
 *{box-sizing:border-box}
-body{margin:0;background:#fff;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1040px;margin-inline:auto;padding-inline:var(--gutter)}
-header .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+.wrap{max-width:1080px;margin-inline:auto;padding-inline:var(--gutter)}
+header{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
 .logo{font-family:var(--display);display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.15rem;letter-spacing:-.04em}
 .logo-mark{width:26px;height:26px;border-radius:8px;background:var(--brand);color:#fff;display:grid;place-items:center}
 .logo-mark svg{width:16px;height:16px}
-.chip{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--brand);border:1px solid var(--hair);border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:7px}
+.chip{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--brand);border:1px solid var(--hair);border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:7px;white-space:nowrap}
 .chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--positive)}
-.hero{padding:clamp(28px,6vw,64px) 0 28px}
-.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:0 0 12px}
-h1{font-family:var(--display);font-weight:700;letter-spacing:-.045em;line-height:1;font-size:clamp(2.4rem,6vw,4.2rem);margin:0 0 14px}
-.sub{color:var(--muted);font-size:clamp(1.02rem,1.6vw,1.18rem);max-width:620px;margin:0}
-.player{margin:8px 0 0;border-radius:16px;overflow:hidden;background:var(--canvas);border:1px solid var(--hair);box-shadow:0 1px 0 rgba(0,0,0,.03),0 34px 80px -28px rgba(15,16,18,.25)}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:0 0 12px}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.035em;margin:0}
+h1{font-weight:700;line-height:1;font-size:clamp(2.5rem,6.4vw,4.4rem);margin-bottom:16px}
+h2{font-weight:700;line-height:1.05;font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:12px}
+h3{font-weight:600;font-size:1.22rem;line-height:1.2;margin-bottom:6px}
+.lead{color:var(--muted);font-size:clamp(1.04rem,1.6vw,1.2rem);max-width:640px;margin:0}
+section{padding:clamp(56px,9vw,96px) 0 0}
+.hero{padding-top:clamp(36px,7vw,72px)}
+.player{margin-top:32px;border-radius:16px;overflow:hidden;background:var(--canvas);border:1px solid var(--hair);box-shadow:var(--shadow)}
 video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:var(--canvas)}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:36px 0 56px;padding:0;list-style:none}
-.steps li{background:var(--canvas);border-radius:14px;padding:18px 18px 20px}
-.steps b{display:block;font-family:var(--display);font-size:1.12rem;letter-spacing:-.02em;margin-bottom:4px}
-.steps span{color:var(--muted);font-size:.95rem}
-.n{font-family:var(--mono);font-size:.72rem;color:var(--brand);letter-spacing:.08em;display:block;margin-bottom:8px}
-footer{border-top:1px solid var(--hair);padding:22px 0 30px;color:var(--muted);font-size:.88rem}
-@media (max-width:720px){.steps{grid-template-columns:1fr}}
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.jump a{font-size:.88rem;font-weight:600;color:var(--ink-soft);background:var(--canvas);border-radius:999px;padding:7px 14px;text-decoration:none}
+.jump a:hover{background:var(--brand-soft);color:var(--brand)}
+
+/* before / after */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+.side{border-radius:16px;padding:24px 24px 26px;border:1px solid var(--hair)}
+.side.today{background:var(--canvas)}
+.side.with{background:var(--brand-soft);border-color:rgba(27,68,224,.18)}
+.side .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;display:block}
+.today .tag{color:var(--muted)}
+.with .tag{color:var(--brand)}
+.side ul{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+.side li{display:flex;gap:11px;align-items:flex-start;color:var(--ink-soft)}
+.side li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;background:#fff;border:1.5px solid rgba(0,0,0,.18)}
+.with li::before{border:none;background:var(--brand) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' d='m6 12.5 4 4 8-9'/%3E%3C/svg%3E") center/12px no-repeat}
+
+/* steps */
+.steps{display:grid;gap:clamp(40px,6vw,72px);margin-top:40px}
+.step{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(20px,4vw,48px);align-items:center}
+.step:nth-child(even){grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
+.step:nth-child(even) .txt{order:2}
+.step .num{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;color:var(--brand);display:block;margin-bottom:10px}
+.step p{color:var(--muted);margin:0 0 12px}
+.step .note{display:inline-flex;gap:8px;align-items:flex-start;font-size:.92rem;color:var(--ink-soft);background:var(--canvas);border-radius:10px;padding:9px 12px;margin:0}
+.step .note b{color:var(--ink)}
+.shot{border-radius:14px;overflow:hidden;border:1px solid var(--hair);box-shadow:var(--shadow);background:var(--canvas)}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:28px}
+.grid.three{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--canvas);border-radius:14px;padding:22px 22px 24px}
+.card p{color:var(--muted);margin:0;font-size:.97rem}
+.icon{width:36px;height:36px;border-radius:10px;background:#fff;color:var(--brand);display:grid;place-items:center;margin-bottom:14px;border:1px solid var(--hair)}
+.icon svg{width:18px;height:18px}
+
+/* team split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+.split .card h3{display:flex;align-items:center;gap:10px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.split ul{margin:10px 0 0;padding-left:18px;color:var(--ink-soft)}
+.split li{margin:5px 0}
+
+/* timeline */
+.timeline{list-style:none;padding:0;margin:28px 0 0;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:s}
+.timeline li{position:relative;border-top:2px solid var(--brand);padding-top:16px}
+.timeline li::before{counter-increment:s;content:"0" counter(s);font-family:var(--mono);font-size:.74rem;color:var(--brand);letter-spacing:.08em;display:block;margin-bottom:8px}
+.timeline p{color:var(--muted);margin:0;font-size:.96rem}
+
+/* faq */
+.faq{margin-top:24px;border-top:1px solid var(--hair)}
+details{border-bottom:1px solid var(--hair)}
+summary{cursor:pointer;list-style:none;padding:18px 36px 18px 0;font-weight:600;font-size:1.06rem;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:4px;top:14px;font-size:1.5rem;font-weight:400;color:var(--muted);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{margin:0 0 20px;color:var(--muted);max-width:760px}
+
+.close{margin:clamp(64px,9vw,104px) 0 0;background:var(--ink);color:#fff;border-radius:20px;padding:clamp(32px,6vw,56px)}
+.close h2{color:#fff}
+.close p{color:rgba(255,255,255,.72);max-width:620px;margin:0}
+footer{padding:28px 0 36px;color:var(--muted);font-size:.88rem}
+
+@media (max-width:820px){
+  .compare,.split,.grid,.grid.three{grid-template-columns:1fr}
+  .step,.step:nth-child(even){grid-template-columns:1fr}
+  .step:nth-child(even) .txt{order:0}
+  .timeline{grid-template-columns:1fr 1fr}
+}
+@media (max-width:480px){.timeline{grid-template-columns:1fr}.chip{display:none}}
 </style>
 </head>
 <body>
@@ -51,22 +121,230 @@ footer{border-top:1px solid var(--hair);padding:22px 0 30px;color:var(--muted);f
     <span class="chip">EXAMPLE BUILD</span>
   </div>
 </header>
+
 <main class="wrap">
   <section class="hero">
     <p class="eyebrow">AuctionFlex 360 + eBay</p>
     <h1>From a photo to sold.</h1>
-    <p class="sub">One example of how your listing process could work. Yours would be built around your items, your steps and your rules.</p>
+    <p class="lead">One example of how your listing process could work. Your team takes the photos. The system does the typing. Your team checks and approves. Yours would be built around your items, your steps and your rules.</p>
+    <div class="player">
+      <video controls playsinline preload="metadata" poster="/auction-demo/poster.jpg">
+        <source src="/auction-demo/demo.mp4" type="video/mp4">
+      </video>
+    </div>
+    <nav class="jump" aria-label="On this page">
+      <a href="#compare">Today vs. with the system</a>
+      <a href="#steps">Step by step</a>
+      <a href="#control">You stay in control</a>
+      <a href="#start">Getting started</a>
+      <a href="#faq">Questions</a>
+    </nav>
   </section>
-  <div class="player">
-    <video controls playsinline preload="metadata" poster="/auction-demo/poster.jpg">
-      <source src="/auction-demo/demo.mp4" type="video/mp4">
-    </video>
+
+  <section id="compare">
+    <p class="eyebrow">The difference</p>
+    <h2>Same items. A lot less typing.</h2>
+    <p class="lead">A lot of listing time goes into typing the same item twice and looking things up. That's the part that goes away.</p>
+    <div class="compare">
+      <div class="side today">
+        <span class="tag">Today, by hand</span>
+        <ul>
+          <li>Type each item into AuctionFlex 360</li>
+          <li>Type it all again on eBay</li>
+          <li>Look up what similar items sold for</li>
+          <li>Decide on a price</li>
+          <li>Write the title, description and every item detail</li>
+          <li>When it sells, go back and update both</li>
+        </ul>
+      </div>
+      <div class="side with">
+        <span class="tag">With your system</span>
+        <ul>
+          <li>Drop the photos into your portal</li>
+          <li>Condition notes, comparable sales and a suggested price are ready</li>
+          <li>Title, description and item details are already written</li>
+          <li>Your team checks the draft and changes anything</li>
+          <li>One click puts it live on eBay and AuctionFlex 360</li>
+          <li>When it sells, both update on their own</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="steps">
+    <p class="eyebrow">Step by step</p>
+    <h2>What happens to one item.</h2>
+    <p class="lead">Here's the camera from the video, one step at a time.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="txt">
+          <span class="num">STEP 01</span>
+          <h3>Your team uploads photos</h3>
+          <p>Photos go into your own private listing portal. A whole batch at once is fine. Nobody types a word.</p>
+        </div>
+        <div class="shot"><img src="/auction-demo/img/upload.jpg" alt="Listing portal with eight uploaded items" loading="lazy" width="1408" height="696"></div>
+      </div>
+      <div class="step">
+        <div class="txt">
+          <span class="num">STEP 02</span>
+          <h3>Condition check</h3>
+          <p>Every photo is looked over. Wear, scuffs, chips and missing pieces get written down, part by part, with an overall condition.</p>
+          <p class="note"><span>Anything a photo can't show, like whether a shutter works, is <b>flagged for your team</b> to check before approving.</span></p>
+        </div>
+        <div class="shot"><img src="/auction-demo/img/condition.jpg" alt="Condition notes for each part of the camera" loading="lazy" width="1408" height="696"></div>
+      </div>
+      <div class="step">
+        <div class="txt">
+          <span class="num">STEP 03</span>
+          <h3>Similar items that sold</h3>
+          <p>It finds similar items that sold recently, including what your own past lots went for in AuctionFlex 360.</p>
+        </div>
+        <div class="shot"><img src="/auction-demo/img/comps.jpg" alt="List of similar items that sold, with your own past lot highlighted" loading="lazy" width="1408" height="696"></div>
+      </div>
+      <div class="step">
+        <div class="txt">
+          <span class="num">STEP 04</span>
+          <h3>A competitive price</h3>
+          <p>From those sales, it suggests a price and shows you where it sits against the others, so the reason is right there.</p>
+        </div>
+        <div class="shot"><img src="/auction-demo/img/price.jpg" alt="Suggested price shown against recent sale prices" loading="lazy" width="1408" height="696"></div>
+      </div>
+      <div class="step">
+        <div class="txt">
+          <span class="num">STEP 05</span>
+          <h3>The listing, written</h3>
+          <p>Title, category, item details and description, written the way your listings already sound.</p>
+        </div>
+        <div class="shot"><img src="/auction-demo/img/write.jpg" alt="Finished listing draft with title, category, item details and description" loading="lazy" width="1408" height="696"></div>
+      </div>
+      <div class="step">
+        <div class="txt">
+          <span class="num">STEP 06</span>
+          <h3>Your team approves</h3>
+          <p>Drafts wait for your team. They check each one, edit anything they want, and press approve. Nothing goes live without that.</p>
+        </div>
+        <div class="shot"><img src="/auction-demo/img/approve.jpg" alt="Drafts waiting for approval, one being approved" loading="lazy" width="1408" height="696"></div>
+      </div>
+      <div class="step">
+        <div class="txt">
+          <span class="num">STEP 07</span>
+          <h3>Live on both. Sold on both.</h3>
+          <p>It goes live on eBay and into AuctionFlex 360 at the same time. When it sells on one, the other updates on its own.</p>
+        </div>
+        <div class="shot"><img src="/auction-demo/img/live.jpg" alt="eBay listing marked sold next to AuctionFlex 360 inventory updated to sold" loading="lazy" width="1408" height="696"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team">
+    <p class="eyebrow">Who does what</p>
+    <h2>Your people do the parts that need hands and judgment.</h2>
+    <div class="split">
+      <div class="card">
+        <h3><span class="dot" style="background:var(--brand)"></span>Your team</h3>
+        <ul>
+          <li>Takes the photos</li>
+          <li>Measures and tests items where it matters</li>
+          <li>Checks each draft and approves it</li>
+          <li>Packs and ships</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="dot" style="background:var(--positive)"></span>The system</h3>
+        <ul>
+          <li>Notes the condition from the photos</li>
+          <li>Finds similar sales and suggests a price</li>
+          <li>Writes the title, description and item details</li>
+          <li>Lists on eBay and AuctionFlex 360, and keeps both in sync</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="control">
+    <p class="eyebrow">You stay in control</p>
+    <h2>Nothing happens without your say.</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+        <h3>Every listing is approved</h3>
+        <p>Drafts wait for your team. Nothing goes live on eBay or AuctionFlex 360 until someone presses approve.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></g></svg></div>
+        <h3>Its own login</h3>
+        <p>The system uses its own AuctionFlex 360 login, not anyone's personal one. You can switch it off at any time.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/></g></svg></div>
+        <h3>No passwords shared</h3>
+        <p>You connect your eBay account on eBay's own sign-in page. We never see or keep your eBay password.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></g></svg></div>
+        <h3>Your data stays yours</h3>
+        <p>Your items, photos, prices and sales history belong to you, and are only used for your listings.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="yours">
+    <p class="eyebrow">Built around you</p>
+    <h2>This was one example. Yours fits how you work.</h2>
+    <p class="lead">Before anything is built, we learn how your team lists today. Then the system is set up to match.</p>
+    <div class="grid three">
+      <div class="card"><h3>Your items</h3><p>Tuned to the categories you actually sell, from furniture and silver to watches and mixed lots.</p></div>
+      <div class="card"><h3>Your style</h3><p>Titles, descriptions and item details written in the format your listings already use.</p></div>
+      <div class="card"><h3>Your rules</h3><p>Your pricing approach, your starting prices, and who on your team approves what.</p></div>
+    </div>
+  </section>
+
+  <section id="start">
+    <p class="eyebrow">Getting started</p>
+    <h2>How we'd get you there.</h2>
+    <ol class="timeline">
+      <li><h3>Walk us through it</h3><p>Show us how one item goes from your shelf to listed today.</p></li>
+      <li><h3>We build it</h3><p>Set up around your steps, your categories and your listing style.</p></li>
+      <li><h3>Test on real items</h3><p>Your team runs real items through it and tells us what to change.</p></li>
+      <li><h3>Go live</h3><p>Once your team is happy, it runs every day, and we keep it running.</p></li>
+    </ol>
+  </section>
+
+  <section id="faq">
+    <p class="eyebrow">Questions</p>
+    <h2>Good to know.</h2>
+    <div class="faq">
+      <details>
+        <summary>Do we have to change how we use AuctionFlex 360?</summary>
+        <p>No. It works with your AuctionFlex 360 and your eBay account as they are today. Your team keeps using both the way they do now.</p>
+      </details>
+      <details>
+        <summary>What if the system isn't sure about something?</summary>
+        <p>It says so. Anything it can't tell from a photo, like whether a part works, is flagged on the draft for your team to check before approving.</p>
+      </details>
+      <details>
+        <summary>Can we change a draft before it goes live?</summary>
+        <p>Yes. Every field can be edited: title, price, condition, description and item details. What your team approves is what goes live.</p>
+      </details>
+      <details>
+        <summary>What kinds of items can it handle?</summary>
+        <p>It's set up for the categories you sell. During the build we test it on your real items, so it's ready for your mix before it goes live.</p>
+      </details>
+      <details>
+        <summary>What happens if something stops working?</summary>
+        <p>We look after it. Keeping it running and fixing anything that comes up is part of the service.</p>
+      </details>
+      <details>
+        <summary>What about photos, packing and shipping?</summary>
+        <p>Those stay with your team. The system takes over the typing, the looking things up and keeping both sites in sync.</p>
+      </details>
+    </div>
+  </section>
+
+  <div class="close">
+    <h2>Want to see it with your own items?</h2>
+    <p>Questions, or want to walk through it with your own items? Just reply to Azi.</p>
   </div>
-  <ol class="steps">
-    <li><span class="n">01</span><b>Upload photos</b><span>Your team drops item photos into your own private portal. No typing.</span></li>
-    <li><span class="n">02</span><b>Check and approve</b><span>A finished draft comes back with condition notes, comps, a suggested price and the listing written. Your team edits anything and approves.</span></li>
-    <li><span class="n">03</span><b>Live on both</b><span>It goes live on eBay and AuctionFlex 360 together. When it sells, both sides update.</span></li>
-  </ol>
 </main>
 <footer><div class="wrap">Groundwork Solutions LLC</div></footer>
 </body>
