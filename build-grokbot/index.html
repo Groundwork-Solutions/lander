@@ -158,14 +158,10 @@ footer{border-top:1px solid var(--hair);padding:28px 0 40px}
   <div class="narrow">
     <span class="chip"><span class="dot"></span>Video walkthrough</span>
     <h1 class="display">Build your own Grok&nbsp;Bot&#8209;style agent desk.</h1>
-    <p class="lead">Bots that each get their own browser, memory, skills and scheduled jobs, running on your own computer and an always-on server. Watch how it's built, then copy the master prompt and build yours with your AI coding agent.</p>
+    <p class="lead">Bots that each get their own browser, memory, skills and scheduled jobs, running on your own computer and an always-on server. Copy the master prompt and build yours with your AI coding agent.</p>
     <div class="hero-cta">
-      <a class="btn btn-ink btn-lg" href="#watch">Watch the video<svg class="i"><use href="#i-play"/></svg></a>
-      <a class="btn btn-line btn-lg" href="#prompt">Get the master prompt<svg class="i"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn-ink btn-lg" href="#prompt">Get the master prompt<svg class="i"><use href="#i-arrow"/></svg></a>
     </div>
-  </div>
-  <div class="wrap main-video" id="watch">
-    <div class="frame" data-video="main"></div>
   </div>
 </section>
 
@@ -174,15 +170,6 @@ footer{border-top:1px solid var(--hair);padding:28px 0 40px}
     <span class="eyebrow">What you'll build</span>
     <h2 class="h2">Six parts, one working agent desk.</h2>
     <div class="grid" id="features"></div>
-  </div>
-</section>
-
-<section id="clips">
-  <div class="wrap">
-    <span class="eyebrow">Clips</span>
-    <h2 class="h2">Each part, step by step.</h2>
-    <p class="lead">Short clips from the build, one for each part of the prompt.</p>
-    <div class="clips" id="clip-grid"></div>
   </div>
 </section>
 
@@ -229,23 +216,6 @@ footer{border-top:1px solid var(--hair);padding:28px 0 40px}
 </footer>
 
 <script>
-/* ===== Videos: fill these in after recording =====
-   For each one, set ONE of:
-     youtube: "VIDEO_ID"          (the part after watch?v= in the YouTube link)
-     file:    "clips/part-1.mp4"   (a video file placed in this folder)
-   Leave both empty and the slot shows a "coming soon" frame. */
-const VIDEOS = {
-  main: { title: "The full walkthrough", youtube: "", file: "" },
-  clips: [
-    { part: "Part 1", title: "The app, bots and chat", youtube: "", file: "" },
-    { part: "Part 2", title: "Each bot gets its own computer", youtube: "", file: "" },
-    { part: "Part 3", title: "The brain: memory, skills, dreaming", youtube: "", file: "" },
-    { part: "Part 4", title: "Making it feel like a pro tool", youtube: "", file: "" },
-    { part: "Part 5", title: "Always on: cloud server + phone", youtube: "", file: "" },
-    { part: "Part 6", title: "The safety check", youtube: "", file: "" },
-  ],
-};
-
 const FEATURES = [
   ["Bots and chat", "Create bots with their own job, model and avatar. Replies stream in word by word, on your AI subscription or any API key."],
   ["Its own computer", "Every bot gets a real browser you can watch live, take over for logins, and hand back."],
@@ -257,18 +227,8 @@ const FEATURES = [
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
-function frameHTML(v, label) {
-  if (v.youtube) return `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.youtube)}?rel=0" title="${esc(v.title)}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`;
-  if (v.file) return `<video src="${esc(v.file)}" controls playsinline preload="metadata" title="${esc(v.title)}"></video>`;
-  return `<div class="soon"><div><div class="play"><svg><use href="#i-play"/></svg></div><b>${esc(v.title)}</b><small>${esc(label)}</small></div></div>`;
-}
-
-document.querySelector('[data-video="main"]').innerHTML = frameHTML(VIDEOS.main, "Video coming soon");
 document.getElementById("features").innerHTML = FEATURES.map(([t, d], i) =>
   `<div class="card"><span class="num">PART ${i + 1}</span><h3 class="h3">${esc(t)}</h3><p>${esc(d)}</p></div>`).join("");
-document.getElementById("clip-grid").innerHTML = VIDEOS.clips.map((c) =>
-  `<figure class="clip" style="margin:0"><div class="frame">${frameHTML(c, "Clip coming soon")}</div>
-   <figcaption><b>${esc(c.part)}</b><span>${esc(c.title)}</span></figcaption></figure>`).join("");
 
 /* ===== The master prompt: read from prompt.md (one source for the page and the download) ===== */
 let PARTS = [];
