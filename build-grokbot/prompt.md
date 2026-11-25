@@ -1,6 +1,6 @@
 # Master prompt: build your own Grok Bot-style agent desk
 
-How to use it: open an empty folder in Claude Code (or any coding agent), paste **Part 0**, then paste the other
+How to use it: open an empty folder in your AI coding agent, paste **Part 0**, then paste the other
 parts one at a time. Don't move on until the part's "Done when" list is true. Each part builds on the last.
 
 ---
@@ -13,8 +13,8 @@ own web browser, remember things, learn skills, and run jobs on a schedule. Thin
 but built from scratch by us: don't copy anyone's code, name or logo.
 
 Ground rules for the whole project:
-- Keep it simple. Python + Flask backend, plain HTML/CSS/JavaScript frontend, SQLite for storage. No frontend
-  framework, no build step.
+- Keep it simple. Pick the simplest stack you can recommend: a small local backend, a plain web frontend and a
+  single-file database. No heavy frameworks, no build step unless we really need one.
 - It runs on my computer first. Later we'll add an always-on cloud server.
 - Explain what you're doing in plain English as you go, and give me a README with the exact commands to run it.
 - Build one part at a time. After each part, run it yourself, test it, and tell me what works and what doesn't.
@@ -32,19 +32,19 @@ need, and any questions you have.
 ```
 Build the core app.
 
-1. A local web server (Flask, 127.0.0.1 only) and a desktop window that opens it (pywebview), so it feels like a
+1. A local web server (only reachable from my own computer) and a desktop window that opens it, so it feels like a
    real app. Add a build script that makes a double-clickable app with an icon.
 2. Bots: create, rename, delete. Each bot has a name, a shape and a color for its avatar, a "main job" (its
    instructions), and its own workspace folder. Left sidebar lists the bots.
 3. Chat: one bot open at a time, with chats I can start, switch between, pin, rename and delete. Show only one empty
    "New chat", always at the top. Messages render Markdown with code blocks (each with a Copy button).
 4. AI providers: let each bot pick a provider and model. Support:
-   - my Claude subscription, by running the official Claude Code program I signed into myself (`claude -p` with
-     stream-json output), never reading or copying my login;
-   - API keys for Anthropic, OpenAI and xAI.
+   - my own AI subscription, by running the official app/command-line program I signed into myself, never
+     reading or copying my login;
+   - API keys for the main AI providers.
    Keys are stored encrypted (a master key file readable only by my user), shown only as the last 4 characters,
    with Save / Replace / Remove / Test buttons.
-5. Stream the reply into the chat word by word while it's being written, like the Claude app.
+5. Stream the reply into the chat word by word while it's being written, like a normal AI chat app.
 6. Show a timer while it works, and under each reply: the model, output tokens and how long it took.
 7. If I send a message while the bot is working, it waits its turn (I can edit or unsend it before it starts).
    A Stop button stops the bot.
@@ -60,7 +60,7 @@ and my keys are encrypted on disk.
 ```
 Give every bot its own browser and files.
 
-1. A real Chrome browser per bot (Playwright), with its own saved profile so logins persist. Only one runs at a time
+1. A dedicated browser space per bot: a real browser with its own saved profile so logins persist. Only one runs at a time
    on my computer to save memory; it turns itself off after 15 idle minutes.
 2. Browser tools the model can call: open a URL, read the page (text + a numbered list of clickable elements),
    click, type, press a key, scroll, go back, upload a file, take a screenshot. Bots that can see images get the
@@ -73,7 +73,7 @@ Give every bot its own browser and files.
 5. Robot checks / CAPTCHAs: the bot never tries to solve or get around them. It hands me the browser with a notice,
    waits up to 15 minutes for me to solve it, then continues.
 6. Workspace files: tools to list, read and write files inside the bot's own folder only (no paths outside it).
-7. Connect the browser and file tools to Claude Code through a small MCP server, so subscription bots get them too.
+7. Connect the browser and file tools to the subscription program too, so subscription bots get the same tools.
 8. No shell commands for bots by default.
 
 Done when: I ask a bot to search a site and summarize a page, I watch it in the live view, I take control and give it
@@ -120,15 +120,14 @@ Add the polish that makes it pleasant to use every day.
 2. Files changed: when a bot edits files, show "N files changed +12 −3" with a diff view (green added, red removed).
 3. Retry and Edit: retry the last reply; edit any message I typed (what came after is hidden, not deleted).
 4. Folded thinking: the bot's steps and visible reasoning fold into one "Thinking" line above its answer.
-5. A usage meter above the chat box: for my subscription, how much of my plan's limits this used (from Claude
-   Code's own limit reports); for API providers, real dollars. Also how full the model's context is, and a
+5. A usage meter above the chat box: for my subscription, how much of my plan's limits this used (from the
+   program's own limit reports); for API providers, real dollars. Also how full the model's context is, and a
    "Clear + continue" button that summarizes the chat and starts fresh.
 6. Search across all chats (Cmd+K), an @ file picker, keyboard shortcuts (Cmd+N new chat, Cmd+. stop), and a Mac
    notification when a long run finishes in the background.
 7. A Code mode: pick a project folder on my computer and a model, and it reads, writes and edits code there. Several
    Code sessions can run side by side; New session works while another one is busy.
-8. Optional extra harnesses: OpenCode for open models (turn on its web search), and a simple built-in tool loop for
-   any OpenAI-compatible API. If a model uses tools and then stops without answering, ask it once to finish, and
+8. Optional support for open models through any standard API, with the same tools (including web search). If a model uses tools and then stops without answering, ask it once to finish, and
    show a clear error instead of "(no reply)".
 
 Done when: I can watch a checklist tick off, see a diff, retry and edit, run two Code sessions at once, and the meter
@@ -142,15 +141,16 @@ shows my plan usage.
 ```
 Make the bots work while my computer is closed.
 
-1. A small always-on cloud server (for example an AWS t4g.medium, about $25/month) that runs the same app, the agent
+1. A dedicated always-on computer space (a small cloud server of your choice) that runs the same app, the agent
    bots, their browsers, jobs and dreams 24/7. A script with: status, push (send code changes and restart, and NEVER
-   overwrite the server's bots, chats or memory), and ssh.
-2. My desktop app talks to the server through a private SSH tunnel. Nothing is open to the public internet.
+   overwrite the server's bots, chats or memory), and connect.
+2. My desktop app talks to the server through a private, encrypted connection. Nothing is open to the public
+   internet.
 3. Code mode stays on my computer (it edits my local folders).
-4. Phone access through Tailscale: only my own devices can open it; add it to the home screen like an app.
-5. Optional per-bot cloud computers (its own small server, or one shared server with a separate browser per bot) that
+4. Phone access through a private network: only my own devices can open it; add it to the home screen like an app.
+5. Optional per-bot dedicated browser spaces (its own small server, or one shared server with a separate browser per bot) that
    turn off after idle time to save money, and get deleted with the bot.
-6. Sign in to my Claude subscription on the server myself (a small helper script), so the server never sees my
+6. Sign in to my AI subscription on the server myself (a small helper script), so the server never sees my
    password.
 
 Done when: I close my laptop, a scheduled job still runs on the server, and I can check its result from my phone.
