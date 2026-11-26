@@ -18,6 +18,8 @@
     { "source": "/dialer/", "destination": "https://dialer.bibbinsazi.workers.dev/" },
     { "source": "/dialer/:path*", "destination": "https://dialer.bibbinsazi.workers.dev/:path*" },
     { "source": "/outreach/", "destination": "https://groundwork-outreach.vercel.app/" },
-    { "source": "/outreach/:path*", "destination": "https://groundwork-outreach.vercel.app/:path*" }
+    { "source": "/outreach/:path*", "destination": "https://groundwork-outreach.vercel.app/:path*" },
+    { "source": "/stats", "destination": "https://gw-site.bibbinsazi.workers.dev/stats" },
+    { "source": "/stats/:path*", "destination": "https://gw-site.bibbinsazi.workers.dev/stats/:path*" }
   ]
 }
