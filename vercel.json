@@ -3,7 +3,8 @@
     { "source": "/crm", "destination": "/crm/", "permanent": false },
     { "source": "/dialer", "destination": "/dialer/", "permanent": false },
     { "source": "/outreach", "destination": "/outreach/", "permanent": false },
-    { "source": "/auction-demo", "destination": "/auction-demo/", "permanent": false }
+    { "source": "/auction-demo", "destination": "/auction-demo/", "permanent": false },
+    { "source": "/ideas/", "destination": "/ideas", "permanent": false }
   ],
   "rewrites": [
     { "source": "/crm/", "destination": "https://groundwork-au-pipeline.vercel.app/" },
@@ -13,6 +14,8 @@
     { "source": "/outreach/", "destination": "https://groundwork-outreach.vercel.app/" },
     { "source": "/outreach/:path*", "destination": "https://groundwork-outreach.vercel.app/:path*" },
     { "source": "/stats", "destination": "https://gw-site.bibbinsazi.workers.dev/stats" },
-    { "source": "/stats/:path*", "destination": "https://gw-site.bibbinsazi.workers.dev/stats/:path*" }
+    { "source": "/stats/:path*", "destination": "https://gw-site.bibbinsazi.workers.dev/stats/:path*" },
+    { "source": "/ideas", "destination": "https://gw-ideas.bibbinsazi.workers.dev/ideas" },
+    { "source": "/ideas/:path*", "destination": "https://gw-ideas.bibbinsazi.workers.dev/ideas/:path*" }
   ]
 }
